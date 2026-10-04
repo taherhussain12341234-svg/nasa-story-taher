@@ -1,316 +1,441 @@
-package main
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>A storybook by NASA</title>
+<style>
+*{box-sizing:border-box;margin:0}
+body{background:#0a2555;color:#fff7d6;font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100dvh;overflow-x:hidden}
+body.lock{overflow:hidden;height:100dvh}
+.serif{font-family:Georgia,'Times New Roman',serif}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.sm{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#a9d8f2}
+main{position:relative;min-height:100dvh;overflow:hidden;background:linear-gradient(160deg,#0f2f73,#0a2555 55%,#081c44)}
+body.lock main{height:100dvh}
+.bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(64px)}
+.stars{position:absolute;inset:-60px;opacity:.8;animation:drift 90s linear infinite;
+background-image:radial-gradient(circle at 16% 21%,rgba(255,235,158,.95) 0 1px,transparent 1.5px),radial-gradient(circle at 72% 16%,rgba(118,227,255,.8) 0 1px,transparent 1.4px),radial-gradient(circle at 88% 63%,rgba(255,150,194,.85) 0 1px,transparent 1.5px),radial-gradient(circle at 46% 72%,rgba(255,255,255,.55) 0 1px,transparent 1.5px);
+background-size:340px 280px,440px 360px,390px 320px,300px 260px}
+@keyframes drift{to{transform:translate(-60px,40px)}}
+header{position:relative;z-index:1;max-width:1360px;margin:0 auto;padding:24px;display:flex;justify-content:space-between;align-items:center;height:88px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:40px;height:40px;border-radius:50%;background:#ffd66b;color:#0c2b61;border:1px solid rgba(120,220,255,.7);display:grid;place-items:center;font-size:12px;font-weight:700;letter-spacing:-.08em}
+.dot{display:inline-block;width:4px;height:4px;border-radius:50%;background:#ff9a68;margin:0 10px;vertical-align:middle}
+.hide-s{display:none}
+section{position:relative;z-index:1;margin:0 auto;padding:28px 24px 56px}
+#cover{max-width:1360px;display:grid;gap:48px;align-items:center;min-height:calc(100dvh - 92px)}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#ff9a68;margin-bottom:28px}
+.eyebrow i{width:40px;height:1px;background:#ff9a68}
+h1{font-size:clamp(3.6rem,13vw,8.5rem);line-height:.85;letter-spacing:-.07em;font-weight:600;color:#fff7d6}
+h1 span{color:#ff8066}
+.lede{margin-top:32px;max-width:430px;font-size:17px;line-height:1.7;color:#d2e8ff}
+.btn{margin-top:36px;display:inline-flex;align-items:center;gap:16px;background:#ff8066;color:#0a2555;border:1px solid #ff8066;border-radius:999px;padding:14px 24px;font:600 14px system-ui,sans-serif;cursor:pointer;box-shadow:0 14px 40px rgba(255,128,102,.28);transition:transform .3s,background .3s}
+.btn:hover{transform:translateY(-4px);background:#ffae75}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe38e;outline-offset:4px}
+.ages{margin-top:32px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#9bc9ed}
+.card{position:relative;aspect-ratio:1.1/1;overflow:hidden;border-radius:28px;border:1px solid rgba(127,223,255,.35);background:#172d69;box-shadow:0 28px 80px rgba(0,0,0,.34)}
+.card svg{position:absolute;inset:0;width:100%;height:100%}
+.live{position:absolute;left:28px;top:28px;z-index:2;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:#b8dfff}
+.cap{position:absolute;left:28px;bottom:24px;z-index:2}
+.cap b{display:block;font-weight:400;font-size:24px;color:#fff7d6}
+.cap small{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#b8dfff}
+.coords{display:flex;justify-content:space-between;margin-top:20px;padding:0 4px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#86bce3}
+#chapter{max-width:1120px;display:none;align-items:center;min-height:calc(100dvh - 92px)}
+.page{width:100%;display:grid;overflow:hidden;border-radius:24px;border:1px solid rgba(255,210,118,.45);background:#fff2cf;color:#182a58;box-shadow:0 28px 100px rgba(0,0,0,.4)}
+.left{position:relative;min-height:290px;padding:28px;color:#fff7d6;background:linear-gradient(145deg,#194e9e,#55318e);display:flex;flex-direction:column;justify-content:space-between;gap:48px;overflow:hidden}
+.left::before{content:"";position:absolute;inset:0;opacity:.6;background-image:radial-gradient(circle at 25% 20%,#ffe89a 0 1px,transparent 1.5px),radial-gradient(circle at 70% 55%,#70e3ff 0 1px,transparent 1.5px);background-size:100px 120px,170px 160px}
+.left>*{position:relative}
+.left h3{margin-top:20px;font-size:clamp(3rem,8vw,3.75rem);line-height:.9;letter-spacing:-.06em;font-weight:400}
+.rule{width:80px;height:1px;background:#ff8066;margin:32px 0 20px}
+.left p{max-width:270px;font-size:14px;line-height:1.7;color:#d2e8ff}
+.right{padding:32px;display:flex;flex-direction:column;justify-content:space-between}
+.meta{display:flex;justify-content:space-between;margin-bottom:48px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#777765}
+.right h2{max-width:480px;font-size:clamp(2.2rem,6vw,3rem);line-height:1;letter-spacing:-.05em;font-weight:400;color:#20253a}
+.body{margin-top:32px;max-width:500px;font-size:15px;line-height:1.8;color:#5c5d62}
+.body p+p{margin-top:20px}
+.note{margin-top:40px;border-top:1px solid #c8c2b3;padding-top:20px;font-size:14px;line-height:1.7;color:#777765}
+.foot{margin-top:48px;border-top:1px solid #c8c2b3;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.back{background:none;border:0;font:600 14px system-ui,sans-serif;color:#35384a;cursor:pointer;padding:8px 0}
+.back:hover{color:#c9553c}
+.back.go{color:#c9553c}
+.rise{animation:rise .8s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 
-import (
-        "bytes"
-        "context"
-        "encoding/json"
-        "fmt"
-        "log"
-        "net/http"
-        "os"
-        "regexp"
-        "strings"
-        "testing"
-        "text/template"
-        "time"
+/* Earth page: full-screen slides with side panel */
+#earthview{display:none;position:fixed;inset:0;z-index:10;max-width:none;margin:0;padding:0;background:#000;overflow:hidden}
+.ev-bg{position:absolute;inset:0;touch-action:pan-y}
+.ev-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);user-select:none;-webkit-user-drag:none;pointer-events:none}
+.ev-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(0,0,0,.72),transparent 62%)}
+.ev-status{position:absolute;inset:0;z-index:5;display:grid;place-items:center;text-align:center;padding:12%;color:#b8dfff;font-size:15px;background:rgba(0,0,0,.8)}
+.ev-status.off{display:none}
+.ev-top{position:absolute;left:0;top:0;padding:max(14px,env(safe-area-inset-top)) 16px 0;z-index:6}
+.ev-back{background:rgba(5,15,42,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#ffd66b;border-radius:999px;padding:11px 18px;font:600 14px system-ui,sans-serif;cursor:pointer}
+.ev-panel{position:absolute;z-index:6;left:12px;right:12px;bottom:max(12px,env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:10px;padding:16px;border-radius:20px;background:rgba(5,15,42,.62);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border:1px solid rgba(127,223,255,.25)}
+.ev-panel h2{font-family:Georgia,serif;font-weight:400;font-size:20px;letter-spacing:0;line-height:1.15;color:#fff7d6}
+.ev-info{font-size:14px;line-height:1.6;color:#d2e8ff;font-variant-numeric:tabular-nums}
+.ev-info strong{color:#ffd66b}
+.ev-desc{display:none;font-size:14px;line-height:1.7;color:#a9d8f2}
+.ev-dots{display:flex;gap:3px}
+.ev-dots button{flex:1;height:26px;padding:0;border:0;background:transparent;position:relative;cursor:pointer}
+.ev-dots button::after{content:"";position:absolute;left:0;right:0;top:11px;height:4px;border-radius:2px;background:rgba(255,255,255,.3);transition:background .4s}
+.ev-dots button.on::after{background:#ffd66b}
+.ev-nav{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.ev-nav button{font:600 14px system-ui,sans-serif;min-height:48px;border-radius:999px;cursor:pointer;border:1px solid #ff8066;background:#ff8066;color:#0a2555;padding:0 8px}
+.ev-nav button.alt{background:transparent;color:#ffd66b;border-color:rgba(255,214,107,.6)}
+.ev-nav button:hover{filter:brightness(1.08)}
+.ev-speeds{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid rgba(255,214,107,.5);border-radius:999px;overflow:hidden}
+.ev-speeds button{background:transparent;color:#ffd66b;border:0;font:600 14px system-ui,sans-serif;min-height:42px;cursor:pointer}
+.ev-speeds button.on{background:#ffd66b;color:#0a2555}
+.ev-hint{font-size:12px;color:#86bce3}
+.ev-mapbox{display:none}
+.ev-map{width:100%;max-height:20dvh;border:1px solid rgba(127,223,255,.3);border-radius:12px;background:#0b1942;display:block}
+.ev-cap{font-size:12px;color:#86bce3;margin-top:6px}
 
-        "github.com/PuerkitoBio/goquery"
-        "golang.org/x/oauth2"
-)
+@media(min-width:640px){.hide-s{display:inline}header,section{padding-left:40px;padding-right:40px}.right{padding:48px}.left{padding:40px}}
+@media(min-width:768px){#cover{grid-template-columns:.9fr 1.1fr;gap:32px;padding-top:0}.page{grid-template-columns:.42fr .58fr}.left{min-height:620px}.right{padding:64px}}
+@media(min-width:800px){
+  .ev-shade{background:linear-gradient(90deg,rgba(0,0,0,.75),transparent 55%)}
+  .ev-top{padding-left:40px;padding-top:24px}
+  .ev-panel{left:40px;right:auto;top:50%;bottom:auto;transform:translateY(-50%);width:360px;padding:24px;gap:14px}
+  .ev-panel h2{font-size:30px}
+  .ev-info{font-size:15px}
+  .ev-desc,.ev-mapbox{display:block}
+}
+@media(min-width:800px) and (max-height:700px){.ev-desc{display:none}}
+@media(min-width:1024px){header,section{padding-left:64px;padding-right:64px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<main>
+  <div class="bg" aria-hidden="true">
+    <div class="stars"></div>
+    <div class="blob" style="left:-160px;top:25%;width:512px;height:512px;background:#155cb7;opacity:.6"></div>
+    <div class="blob" style="right:-192px;top:-160px;width:600px;height:600px;background:#b52f91;opacity:.4"></div>
+    <div class="blob" style="bottom:-220px;left:50%;width:480px;height:480px;background:#116c8d;opacity:.3"></div>
+  </div>
 
-const issueTemplateContent = `
-{{range .}}
-- [ ] {{.}}
-{{end}}
-`
+  <header>
+    <div class="brand">
+      <span class="logo" aria-label="NASA">NASA</span>
+      <span class="sm hide-s">Field journal / 01</span>
+    </div>
+    <div class="sm"><span class="hide-s">A storybook by NASA</span><span class="dot"></span>2024–∞</div>
+  </header>
 
-var issueTemplate = template.Must(template.New("issue").Parse(issueTemplateContent))
+  <!-- PAGE 1: COVER -->
+  <section id="cover">
+    <div class="rise">
+      <div class="eyebrow"><i></i>An invitation to wonder</div>
+      <h1 class="serif">The sky is<br><span>not</span> the limit.</h1>
+      <p class="lede">A field guide to the machines, people, and impossible questions that carry us beyond home.</p>
+      <button class="btn" id="begin" type="button">Begin the story <span aria-hidden="true">→</span></button>
+      <div class="ages">For curious minds, ages 7 to 107</div>
+    </div>
 
-// FIXME: use official github client
-var reGithubRepo = regexp.MustCompile("https://github.com/([a-zA-Z0-9-._]+)/([a-zA-Z0-9-._]+)$")
-var githubGETREPO = "https://api.github.com/repos%s"
-var githubGETCOMMITS = "https://api.github.com/repos%s/commits"
-var githubPOSTISSUES = "https://api.github.com/repos/avelino/awesome-go/issues"
+    <div class="rise" style="animation-delay:.18s">
+      <div class="card">
+        <div class="live mono">● Live from Earth</div>
+        <svg viewBox="0 0 650 590" fill="none" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A NASA rocket standing on a launchpad beneath a night sky">
+          <defs>
+            <linearGradient id="sky" x1="420" y1="0" x2="190" y2="590" gradientUnits="userSpaceOnUse"><stop stop-color="#4859d8"/><stop offset=".5" stop-color="#173b89"/><stop offset="1" stop-color="#0a2253"/></linearGradient>
+            <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#FFE16B"/><stop offset=".35" stop-color="#FF9660"/><stop offset="1" stop-color="#FF5E7A" stop-opacity="0"/></linearGradient>
+            <filter id="blur"><feGaussianBlur stdDeviation="18"/></filter>
+          </defs>
+          <rect width="650" height="590" fill="url(#sky)"/>
+          <circle cx="500" cy="110" r="65" fill="#FFE89A" opacity=".13"/>
+          <circle cx="500" cy="110" r="43" fill="#FFF3C4" opacity=".16"/>
+          <g fill="#FFF4B0" opacity=".85"><circle cx="94" cy="112" r="1.6"/><circle cx="143" cy="206" r="1.1"/><circle cx="240" cy="90" r="1.4"/><circle cx="356" cy="145" r="1.2"/><circle cx="582" cy="195" r="1.4"/><circle cx="554" cy="52" r="1"/><circle cx="72" cy="315" r="1.1"/></g>
+          <path d="M0 486C120 444 179 460 270 472C392 489 492 442 650 456V590H0V486Z" fill="#0b1942"/>
+          <path d="M0 530C130 504 245 518 343 511C472 501 551 520 650 501V590H0V530Z" fill="#071432"/>
+          <g transform="translate(340 82)">
+            <path d="M-24 306L-10 306L-10 93C-10 57 0 26 15 3C30 26 40 57 40 93V306H54L45 320H-35L-24 306Z" fill="#FFF0B7"/>
+            <path d="M-10 306H40V329H-10V306Z" fill="#A9B6D2"/>
+            <path d="M-4 78H34V181H-4V78Z" fill="#56D9E7"/>
+            <path d="M0 87H30V113H0V87Z" fill="#183064"/>
+            <path d="M0 87L30 113H0V87Z" fill="#D2F9FF" opacity=".65"/>
+            <path d="M-9 201H40L50 214H-19L-9 201Z" fill="#FF7367"/>
+            <path d="M-13 225H44V235H-13V225Z" fill="#6F8ECB"/>
+            <path d="M-10 267H41V279H-10V267Z" fill="#B7C4E2"/>
+            <path d="M-7 329H37L57 353H-27L-7 329Z" fill="#344E96"/>
+            <path d="M-14 348H44L52 362H-22L-14 348Z" fill="url(#flame)" opacity=".95"/>
+            <path d="M0 350C9 377 20 402 22 430C23 405 34 377 42 350H0Z" fill="url(#flame)" filter="url(#blur)" opacity=".7"/>
+          </g>
+          <path d="M214 500H465" stroke="#FF9F68" stroke-opacity=".7" stroke-dasharray="3 7"/>
+          <path d="M194 520H489" stroke="#76DFFF" stroke-opacity=".4"/>
+        </svg>
+        <div class="cap"><b class="serif">To the ones who look up</b><small class="mono">A NASA storybook</small></div>
+      </div>
+      <div class="coords mono"><span>28° 36' N / 80° 36' W</span><span>Launch complex 39A</span></div>
+    </div>
+  </section>
 
-// FIXME: use https
-var awesomeGoGETISSUES = "http://api.github.com/repos/avelino/awesome-go/issues" //only returns open issues
-// FIXME: variable has type Duration, but contains a number. we should use
-//
-//        time.Hour * ... or change type of variable
-var numberOfYears time.Duration = 1
-var timeNow = time.Now()
-var issueTitle = fmt.Sprintf("Investigate repositories with more than 1 year without update - %s", timeNow.Format(time.DateOnly))
+  <!-- PAGE 2: CHAPTER ONE -->
+  <section id="chapter">
+    <div class="page">
+      <div class="left">
+        <div class="sm" style="color:#ffbf70">📖 Chapter one</div>
+        <div>
+          <div class="mono sm" style="color:#b8dfff;letter-spacing:.25em">Entry 001 / The beginning</div>
+          <h3 class="serif">Look<br>closer.</h3>
+          <div class="rule"></div>
+          <p>Every mission starts with a question that refuses to stay small.</p>
+        </div>
+        <div class="mono sm" style="display:flex;justify-content:space-between;font-size:9px;color:#9ed8ef"><span>NASA archives</span><span>01 / 06</span></div>
+      </div>
+      <div class="right">
+        <div>
+          <div class="meta"><span>Field note</span><span>July 20, 1969 — and onward</span></div>
+          <h2 class="serif">Before there were footprints, there was a <em>maybe.</em></h2>
+          <div class="body">
+            <p>Someone looked at the Moon and wondered what it would feel like to stand there. That question traveled through classrooms, workshops, radio waves, and millions of hopeful minds.</p>
+            <p>NASA is a collection of those questions made real — rovers that taste the soil of Mars, telescopes that see the first light in the universe, and people brave enough to try.</p>
+          </div>
+          <p class="note">🔭 Turn the page to meet the missions that are changing what we know about home.</p>
+        </div>
+        <div class="foot">
+          <button class="back" id="back" type="button">← Return to cover</button>
+          <button class="back go" id="turn" type="button">Turn the page →</button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-const deadLinkMessage = " this repository might no longer exist! (status code >= 400 returned)"
-const movedPermanently = " status code 301 received"
-const status302 = " status code 302 received"
-const archived = " repository has been archived"
+  <!-- PAGE 3: EARTH SLIDES -->
+  <section id="earthview">
+    <div class="ev-bg" id="earth" role="img" aria-label="Photos of Earth from the DSCOVR spacecraft">
+      <div class="ev-status" id="status">Loading pictures…</div>
+    </div>
+    <div class="ev-shade"></div>
+    <div class="ev-top"><button class="ev-back" id="evback" type="button">← Back to story</button></div>
+    <div class="ev-panel">
+      <h2 id="title">Earth, from a million miles away</h2>
+      <p class="ev-info" id="text"></p>
+      <p class="ev-desc">Each real photo from DSCOVR's EPIC camera is about two hours apart. The slides roll on their own through one whole day, and you can take over at any time.</p>
+      <div class="ev-dots" id="dots" role="group" aria-label="Jump to a photo"></div>
+      <div class="ev-nav">
+        <button id="prev" type="button">← Previous</button>
+        <button id="play" class="alt" type="button">⏸ Auto</button>
+        <button id="next" type="button">Next →</button>
+      </div>
+      <div class="ev-speeds" role="group" aria-label="Auto-roll speed">
+        <button type="button" data-ms="5000">Slow</button>
+        <button type="button" data-ms="3000" class="on">Medium</button>
+        <button type="button" data-ms="1400">Fast</button>
+      </div>
+      <p class="ev-hint">Swipe the picture, tap the bars, or use the arrow keys to go manually.</p>
+      <div class="ev-mapbox">
+        <svg class="ev-map" viewBox="0 0 360 180" role="img" aria-label="Map showing the point on Earth at the centre of the picture">
+          <g stroke="#1d3a78" stroke-width=".5"><path d="M60 0V180M120 0V180M180 0V180M240 0V180M300 0V180"/><path d="M0 45H360M0 90H360M0 135H360"/></g>
+          <path d="M0 90H360M180 0V180" stroke="#3f68b8" stroke-width="1"/>
+          <g id="marker" style="transform:translate(180px,90px);transition:transform 1.4s ease">
+            <circle r="14" fill="none" stroke="#ffd66b" stroke-opacity=".5"/>
+            <circle r="5" fill="#ff8066"/>
+          </g>
+        </svg>
+        <p class="ev-cap">Red dot: the point at the centre of the picture.</p>
+      </div>
+    </div>
+  </section>
+</main>
 
-// LIMIT specifies the max number of repositories that are added in a single run of the script
-var LIMIT = 10
-var ctr = 0
+<script>
+/* ---------- Page switching ---------- */
+var $ = function (id) { return document.getElementById(id); };
+var cover = $("cover"), chapter = $("chapter"), earthview = $("earthview");
+var current = "cover";
 
-type tokenSource struct {
-        AccessToken string
+function show(name) {
+  current = name;
+  cover.style.display = name === "cover" ? "" : "none";
+  chapter.style.display = name === "chapter" ? "flex" : "none";
+  earthview.style.display = name === "earth" ? "block" : "none";
+  chapter.classList.toggle("rise", name === "chapter");
+  document.body.classList.toggle("lock", name === "earth");
+  window.scrollTo(0, 0);
+  if (name === "earth") { enterEarth(); } else { clearTimeout(timer); }
+}
+$("begin").onclick = function () { show("chapter"); };
+$("back").onclick = function () { show("cover"); };
+$("turn").onclick = function () { show("earth"); };
+$("evback").onclick = function () { show("chapter"); };
+document.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") { show(current === "earth" ? "chapter" : "cover"); }
+  if (current !== "earth") { return; }
+  if (e.key === " " && e.target === document.body) { e.preventDefault(); setAuto(!auto); }
+  if (e.key === "ArrowLeft") { go(idx - 1); }
+  if (e.key === "ArrowRight") { go(idx + 1); }
+});
+
+/* ---------- Earth data (NASA DSCOVR EPIC) ---------- */
+var observations = [
+  { id: "20260926004554", image: "epic_1b_20260926004554", date: "2026-09-26 00:41:06", lat: 5.456543, lon: 165.622559 },
+  { id: "20260926023357", image: "epic_1b_20260926023357", date: "2026-09-26 02:29:08", lat: 5.493164, lon: 138.515625 },
+  { id: "20260926042159", image: "epic_1b_20260926042159", date: "2026-09-26 04:17:10", lat: 5.471191, lon: 111.511230 },
+  { id: "20260926061001", image: "epic_1b_20260926061001", date: "2026-09-26 06:05:13", lat: 5.471191, lon: 84.462891 },
+  { id: "20260926075804", image: "epic_1b_20260926075804", date: "2026-09-26 07:53:15", lat: 5.405273, lon: 57.436523 },
+  { id: "20260926094607", image: "epic_1b_20260926094607", date: "2026-09-26 09:41:18", lat: 5.412598, lon: 30.402832 },
+  { id: "20260926113409", image: "epic_1b_20260926113409", date: "2026-09-26 11:29:20", lat: 5.449219, lon: 3.339844 },
+  { id: "20260926132211", image: "epic_1b_20260926132211", date: "2026-09-26 13:17:23", lat: 5.383301, lon: -23.686523 },
+  { id: "20260926151014", image: "epic_1b_20260926151014", date: "2026-09-26 15:05:25", lat: 5.383301, lon: -50.690918 },
+  { id: "20260926165816", image: "epic_1b_20260926165816", date: "2026-09-26 16:53:27", lat: 5.405273, lon: -77.739258 },
+  { id: "20260926184619", image: "epic_1b_20260926184619", date: "2026-09-26 18:41:30", lat: 5.397949, lon: -104.816895 },
+  { id: "20260926203421", image: "epic_1b_20260926203421", date: "2026-09-26 20:29:33", lat: 5.354004, lon: -131.872559 },
+  { id: "20260926222223", image: "epic_1b_20260926222223", date: "2026-09-26 22:17:35", lat: 5.324707, lon: -158.869629 }
+];
+
+var N = observations.length;
+var earthEl = $("earth"), statusBox = $("status"), text = $("text");
+var playBtn = $("play"), dotsBox = $("dots"), marker = $("marker");
+var dayLabel = new Date(Date.parse(observations[0].date.replace(" ", "T") + "Z")).toUTCString().substring(5, 16);
+var layers = [], dots = [], loadStarted = false, ready = false;
+var idx = 0, prevIdx = -1, auto = true, delay = 3000, timer = null;
+var FADE = "opacity 1.4s ease, transform 7s ease-out";
+
+function getImageURL(o) {
+  var d = o.date.substring(0, 10);
+  return "https://epic.gsfc.nasa.gov/archive/natural/" + d.substring(0, 4) + "/" + d.substring(5, 7) + "/" + d.substring(8, 10) + "/jpg/" + o.image + ".jpg";
 }
 
-type issue struct {
-        Title string `json:"title"`
-        Body  string `json:"body"`
+// Bars to jump to any photo
+observations.forEach(function (o, k) {
+  var b = document.createElement("button");
+  b.type = "button";
+  b.setAttribute("aria-label", "Photo " + (k + 1));
+  b.onclick = function () { go(k); };
+  dotsBox.appendChild(b);
+  dots.push(b);
+});
+
+// Load every picture in the background so the Earth page starts straight away
+function loadPictures() {
+  loadStarted = true;
+  var done = 0, failed = 0;
+  function finished() {
+    done++;
+    statusBox.textContent = "Loading pictures " + done + " of " + N + "…";
+    if (done < N) { return; }
+    if (failed === N) {
+      statusBox.textContent = "The pictures could not load. Check your internet connection and reload the page.";
+      return;
+    }
+    statusBox.classList.add("off");
+    ready = true;
+    if (current === "earth") { startSlides(); }
+  }
+  observations.forEach(function (o) {
+    var img = document.createElement("img");
+    img.alt = "";
+    img.draggable = false;
+    img.onload = finished;
+    img.onerror = function () { failed++; finished(); };
+    earthEl.insertBefore(img, statusBox);
+    layers.push(img);
+    img.src = getImageURL(o);
+  });
 }
 
-func (t *tokenSource) Token() (*oauth2.Token, error) {
-        return &oauth2.Token{
-                AccessToken: t.AccessToken,
-        }, nil
+function hide(img) {
+  img.style.transition = "none";
+  img.style.opacity = 0;
+  img.style.transform = "scale(1.06)";
+  img.style.zIndex = 0;
 }
 
-func getRepositoriesFromBody(body string) []string {
-        links := strings.Split(body, "- ")
-        for i, link := range links {
-                link = strings.ReplaceAll(link, "\r", "")
-                link = strings.ReplaceAll(link, "[ ]", "")
-                link = strings.ReplaceAll(link, "[x]", "")
-                link = strings.ReplaceAll(link, " ", "")
-                link = strings.ReplaceAll(link, "\n", "")
-                link = strings.ReplaceAll(link, deadLinkMessage, "")
-                link = strings.ReplaceAll(link, movedPermanently, "")
-                link = strings.ReplaceAll(link, status302, "")
-                link = strings.ReplaceAll(link, archived, "")
-                links[i] = link
-        }
-
-        return links
+// Show one slide: the new picture fades in smoothly over the old one
+function render(first) {
+  var o = observations[idx];
+  layers.forEach(function (img, k) {
+    if (k === idx) {
+      if (first) { img.style.transition = "none"; }
+      else { img.style.transition = FADE; }
+      img.style.zIndex = 2;
+      img.style.opacity = 1;
+      img.style.transform = "scale(1)";
+    } else if (k === prevIdx && !first) {
+      img.style.zIndex = 1;
+    } else {
+      hide(img);
+    }
+  });
+  var mapX = ((o.lon + 180) % 360 + 360) % 360, mapY = 90 - o.lat;
+  marker.style.transform = "translate(" + mapX + "px," + mapY + "px)";
+  var lon = mapX - 180;
+  text.innerHTML = "<strong>Photo " + (idx + 1) + " of " + N + "</strong><br>" +
+    dayLabel + ", " + o.date.substring(11, 16) + " UTC<br>" +
+    "Centre: " + o.lat.toFixed(1) + "° N, " + Math.abs(lon).toFixed(1) + "° " + (lon >= 0 ? "E" : "W");
+  dots.forEach(function (d, k) { d.classList.toggle("on", k === idx); });
 }
 
-func generateIssueBody(t *testing.T, repositories []string) (string, error) {
-        t.Helper()
-
-        buf := bytes.NewBuffer(nil)
-        err := issueTemplate.Execute(buf, repositories)
-        requireNoErr(t, err, "Failed to generate template")
-
-        return buf.String(), nil
+function schedule() {
+  clearTimeout(timer);
+  if (auto && ready && current === "earth") {
+    timer = setTimeout(function () { go(idx + 1); }, delay);
+  }
 }
 
-func createIssue(t *testing.T, staleRepos []string, client *http.Client) {
-        t.Helper()
-
-        if len(staleRepos) == 0 {
-                log.Print("NO STALE REPOSITORIES")
-                return
-        }
-
-        body, err := generateIssueBody(t, staleRepos)
-        requireNoErr(t, err, "failed to generate issue body")
-
-        newIssue := &issue{
-                Title: issueTitle,
-                Body:  body,
-        }
-        buf := bytes.NewBuffer(nil)
-        requireNoErr(t, json.NewEncoder(buf).Encode(newIssue), "failed to encode json req")
-
-        req, err := http.NewRequest(http.MethodPost, githubPOSTISSUES, buf)
-        requireNoErr(t, err, "failed to create request")
-
-        _, roundTripErr := client.Do(req)
-        requireNoErr(t, roundTripErr, "failed to send request")
+function go(i) {
+  if (!ready) { return; }
+  prevIdx = idx;
+  idx = ((i % N) + N) % N;
+  render(false);
+  schedule();
 }
 
-func getAllFlaggedRepositories(t *testing.T, client *http.Client) map[string]bool {
-        t.Helper()
-
-        req, err := http.NewRequest(http.MethodGet, awesomeGoGETISSUES, nil)
-        requireNoErr(t, err, "failed to create request")
-
-        res, err := client.Do(req)
-        requireNoErr(t, err, "failed to send request")
-
-        defer res.Body.Close()
-
-        var issues []issue
-        requireNoErr(t, json.NewDecoder(res.Body).Decode(&issues), "failed to unmarshal response")
-
-        addressedRepositories := make(map[string]bool)
-        for _, issue := range issues {
-                if issue.Title != issueTitle {
-                        continue
-                }
-
-                repos := getRepositoriesFromBody(issue.Body)
-                for _, repo := range repos {
-                        addressedRepositories[repo] = true
-                }
-        }
-
-        return addressedRepositories
+function setAuto(on) {
+  auto = on;
+  playBtn.textContent = on ? "⏸ Auto" : "▶ Auto";
+  schedule();
 }
 
-func checkRepoAvailability(toRun bool, href string, client *http.Client) ([]string, bool) {
-        if !toRun {
-                return nil, false
-        }
-
-        ownerRepo := strings.ReplaceAll(href, "https://github.com", "")
-        apiCall := fmt.Sprintf(githubGETREPO, ownerRepo)
-        req, err := http.NewRequest(http.MethodGet, apiCall, nil)
-        if err != nil {
-                log.Printf("Failed at repository %s\n", href)
-                return nil, false
-        }
-
-        resp, err := client.Do(req)
-        if err != nil {
-                log.Printf("Failed at repository %s\n", href)
-                return nil, false
-        }
-
-        defer resp.Body.Close()
-
-        var repoResp struct {
-                Archived bool `json:"archived"`
-        }
-
-        if err := json.NewDecoder(resp.Body).Decode(&repoResp); err != nil {
-                return nil, false
-        }
-
-        var isRepoAdded bool
-
-        var warnings []string
-        if resp.StatusCode == http.StatusMovedPermanently {
-                warnings = append(warnings, href+movedPermanently)
-                log.Printf("%s returned %d", href, resp.StatusCode)
-                isRepoAdded = true
-        }
-
-        if resp.StatusCode == http.StatusFound && !isRepoAdded {
-                warnings = append(warnings, href+status302)
-                log.Printf("%s returned %d", href, resp.StatusCode)
-                isRepoAdded = true
-        }
-
-        if resp.StatusCode >= http.StatusBadRequest && !isRepoAdded {
-                warnings = append(warnings, href+deadLinkMessage)
-                log.Printf("%s might not exist!", href)
-                isRepoAdded = true
-        }
-
-        if repoResp.Archived && !isRepoAdded {
-                warnings = append(warnings, href+archived)
-                log.Printf("%s is archived!", href)
-                isRepoAdded = true
-        }
-
-        // FIXME: expression `(len(warnings) > 0) == isRepoAdded` is always true.
-        return warnings, isRepoAdded
+function startSlides() {
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  prevIdx = -1;
+  render(true);
+  setAuto(!reduce);
 }
 
-func checkRepoCommitActivity(toRun bool, href string, client *http.Client) ([]string, bool) {
-        if !toRun {
-                return nil, false
-        }
-
-        ownerRepo := strings.ReplaceAll(href, "https://github.com", "")
-        apiCall := fmt.Sprintf(githubGETCOMMITS, ownerRepo)
-        req, err := http.NewRequest(http.MethodGet, apiCall, nil)
-        if err != nil {
-                log.Printf("Failed at repository %s\n", href)
-                return nil, false
-        }
-
-        since := timeNow.Add(-1 * 365 * 24 * numberOfYears * time.Hour)
-        sinceQuery := since.Format(time.RFC3339)
-
-        q := req.URL.Query()
-        q.Add("since", sinceQuery)
-        req.URL.RawQuery = q.Encode()
-
-        resp, err := client.Do(req)
-        if err != nil {
-                log.Printf("Failed at repository %s\n", href)
-                return nil, false
-        }
-
-        defer resp.Body.Close()
-
-        var respObj []map[string]interface{}
-        // FIXME: handle error in all that cases
-        if err := json.NewDecoder(resp.Body).Decode(&respObj); err != nil {
-                return nil, false
-        }
-
-        var warnings []string
-        var isRepoAdded bool
-        isAged := len(respObj) == 0
-        if isAged {
-                log.Printf("%s has not had a commit in a while", href)
-                warnings = append(warnings, href)
-                isRepoAdded = true
-        }
-
-        // FIXME: expression `(len(warnings) > 0) == isRepoAdded` is always true.
-        return warnings, isRepoAdded
+function enterEarth() {
+  if (!loadStarted) { loadPictures(); }
+  else if (ready) { startSlides(); }
 }
 
-func TestStaleRepository(t *testing.T) {
-        doc := goqueryFromReadme(t)
+$("prev").onclick = function () { go(idx - 1); };
+$("next").onclick = function () { go(idx + 1); };
+playBtn.onclick = function () { setAuto(!auto); };
 
-        oauth := os.Getenv("OAUTH_TOKEN")
-        client := &http.Client{
-                Transport: &http.Transport{},
-        }
+// Speed of the auto-roll
+var speedBtns = document.querySelectorAll(".ev-speeds button");
+Array.prototype.forEach.call(speedBtns, function (btn) {
+  btn.addEventListener("click", function () {
+    delay = Number(btn.getAttribute("data-ms"));
+    Array.prototype.forEach.call(speedBtns, function (b) { b.classList.toggle("on", b === btn); });
+    schedule();
+  });
+});
 
-        if oauth == "" {
-                log.Print("No oauth token found. Using unauthenticated client ...")
-        } else {
-                tokenSource := &tokenSource{
-                        AccessToken: oauth,
-                }
-                client = oauth2.NewClient(context.Background(), tokenSource)
-        }
+// Swipe the picture, or scroll the wheel, to change slide
+var sx = null, wheelLock = 0;
+earthEl.addEventListener("pointerdown", function (e) { sx = e.clientX; });
+earthEl.addEventListener("pointerup", function (e) {
+  if (sx === null) { return; }
+  var dx = e.clientX - sx;
+  sx = null;
+  if (Math.abs(dx) > 40) { go(idx + (dx < 0 ? 1 : -1)); }
+});
+earthEl.addEventListener("pointercancel", function () { sx = null; });
+earthEl.addEventListener("wheel", function (e) {
+  e.preventDefault();
+  var now = Date.now();
+  if (now - wheelLock < 500) { return; }
+  wheelLock = now;
+  go(idx + (e.deltaY > 0 ? 1 : -1));
+}, { passive: false });
 
-        // FIXME: return addressedRepositories, no need to pass
-        addressedRepositories := getAllFlaggedRepositories(t, client)
-
-        var staleRepos []string
-        doc.
-                Find("body li > a:first-child").
-                EachWithBreak(func(_ int, s *goquery.Selection) bool {
-                        href, ok := s.Attr("href")
-                        if !ok {
-                                log.Println("expected to have href")
-                                return true
-                        }
-
-                        if ctr >= LIMIT && LIMIT != -1 {
-                                log.Print("Max number of issues created")
-                                return false
-                        }
-
-                        if _, issueExists := addressedRepositories[href]; issueExists {
-                                log.Printf("issue already exists for %s\n", href)
-                                return true
-                        }
-
-                        if !reGithubRepo.MatchString(href) {
-                                log.Printf("%s non-github repo not currently handled", href)
-                        }
-
-                        // FIXME: this is `or` expres24sion. Probably we need `and`?
-                        warnings, isRepoAdded := checkRepoAvailability(true, href, client)
-                        staleRepos = append(staleRepos, warnings...)
-
-                        warnings, isRepoAdded = checkRepoCommitActivity(!isRepoAdded, href, client)
-                        staleRepos = append(staleRepos, warnings...)
-
-                        if isRepoAdded {
-                                ctr++
-                        }
-
-                        return true
-                })
-
-        createIssue(t, staleRepos, client)
-}
+render(true);
+setTimeout(loadPictures, 300);
+</script>
+</body>
+</html>
