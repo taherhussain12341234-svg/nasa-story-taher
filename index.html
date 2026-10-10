@@ -56,14 +56,54 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
 .body{margin-top:32px;max-width:500px;font-size:15px;line-height:1.8;color:#5c5d62}
 .body p+p{margin-top:20px}
 .note{margin-top:40px;border-top:1px solid #c8c2b3;padding-top:20px;font-size:14px;line-height:1.7;color:#777765}
-.foot{margin-top:48px;border-top:1px solid #c8c2b3;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:12px}
-.back{background:none;border:0;font:600 14px system-ui,sans-serif;color:#35384a;cursor:pointer;padding:8px 0}
+.foot{margin-top:48px;border-top:1px solid #c8c2b3;padding-top:20px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.back{background:none;border:0;font:600 14px system-ui,sans-serif;color:#35384a;cursor:pointer;padding:8px 0;text-decoration:none;display:inline-block}
 .back:hover{color:#c9553c}
 .back.go{color:#c9553c}
 .rise{animation:rise .8s ease both}
 @keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
 
-/* Earth page: full-screen slides with side panel */
+/* ===== Solar system page (full screen, 3D) ===== */
+#orreryview{display:none;position:fixed;inset:0;z-index:10;max-width:none;margin:0;padding:0;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#16358a 0%,#0a2555 55%,#071a40 100%)}
+#orb-canvas{position:absolute;inset:0;z-index:1;touch-action:none;cursor:grab}
+#orb-canvas.drag{cursor:grabbing}
+#orb-canvas.hot{cursor:pointer}
+#orb-canvas canvas{display:block}
+.orb-labels{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.orb-label{position:absolute;left:0;top:0;font:11px ui-monospace,Menlo,Consolas,monospace;color:#d2e8ff;background:rgba(5,15,42,.55);padding:2px 8px;border-radius:999px;white-space:nowrap;will-change:transform}
+.orb-label.on{background:#ffd66b;color:#0a2555;font-weight:600}
+.orb-dock{position:absolute;z-index:6;top:calc(max(14px,env(safe-area-inset-top)) + 58px);left:16px;right:16px;display:flex;gap:6px;flex-wrap:wrap}
+.orb-dock button{background:rgba(5,15,42,.6);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:#ffd66b;border-radius:999px;padding:8px 13px;min-height:38px;font:600 13px system-ui,sans-serif;cursor:pointer}
+.orb-dock button.on{background:#ffd66b;color:#0a2555;border-color:#ffd66b}
+.orb-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:0 -4px;padding:0 4px 2px}
+.orb-pills::-webkit-scrollbar{display:none}
+.orb-pills button{flex:none;display:flex;align-items:center;gap:7px;border:1px solid rgba(255,255,255,.22);background:transparent;color:#d2e8ff;border-radius:999px;padding:8px 13px;min-height:38px;font:600 13px system-ui,sans-serif;cursor:pointer}
+.orb-pills button.on{background:#fff7d6;color:#0a2555;border-color:#fff7d6}
+.orb-pills i{width:11px;height:11px;border-radius:50%;box-shadow:inset -2px -2px 3px rgba(0,0,0,.3)}
+.orb-facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.orb-facts div{font:600 13px ui-monospace,Menlo,Consolas,monospace;color:#fff7d6}
+.orb-facts span{display:block;font:400 10px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#86bce3;margin-bottom:2px}
+.orb-facts .more{display:none}
+.orb-cta{font:600 14px system-ui,sans-serif;min-height:48px;border-radius:999px;cursor:pointer;border:1px solid #ff8066;background:#ff8066;color:#0a2555;padding:0 16px;width:100%}
+.orb-cta:hover{filter:brightness(1.08)}
+#orb-fallback{display:none;position:absolute;z-index:7;left:16px;right:16px;top:50%;transform:translateY(-50%);padding:20px;border-radius:20px;background:rgba(5,15,42,.85);border:1px solid rgba(127,223,255,.25);color:#d2e8ff;font-size:15px;line-height:1.7}
+#orb-fallback a{color:#ffd66b;margin-right:12px;display:inline-block}
+
+/* ===== Planet page ===== */
+#planetview{max-width:1120px;display:none;align-items:center;min-height:calc(100dvh - 92px)}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:14px;margin-top:28px}
+.facts div{font:600 13px ui-monospace,Menlo,Consolas,monospace;color:#20253a}
+.facts span{display:block;font:400 10px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#777765;margin-bottom:2px}
+.obs{margin-top:28px;display:grid;gap:14px;max-width:520px}
+.obs p{font-size:15px;line-height:1.7;color:#5c5d62}
+.obs b{color:#20253a}
+.gallery{margin-top:28px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.gallery figure{border-radius:12px;overflow:hidden;border:1px solid #c8c2b3;background:#fff}
+.gallery img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.gallery figcaption{padding:8px 10px;font-size:12px;color:#777765}
+.empty{margin-top:28px;border:1px dashed #c8c2b3;border-radius:12px;padding:14px 16px;font-size:13px;line-height:1.6;color:#777765}
+
+/* ===== Earth page: full-screen slides with side panel ===== */
 #earthview{display:none;position:fixed;inset:0;z-index:10;max-width:none;margin:0;padding:0;background:#000;overflow:hidden}
 .ev-bg{position:absolute;inset:0;touch-action:pan-y}
 .ev-bg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.06);user-select:none;-webkit-user-drag:none;pointer-events:none}
@@ -93,6 +133,9 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
 .ev-map{width:100%;max-height:20dvh;border:1px solid rgba(127,223,255,.3);border-radius:12px;background:#0b1942;display:block}
 .ev-cap{font-size:12px;color:#86bce3;margin-top:6px}
 
+#fade{position:fixed;inset:0;z-index:50;background:#0a2555;opacity:0;pointer-events:none;transition:opacity .55s ease}
+#fade.on{opacity:1;pointer-events:all}
+
 @media(min-width:640px){.hide-s{display:inline}header,section{padding-left:40px;padding-right:40px}.right{padding:48px}.left{padding:40px}}
 @media(min-width:768px){#cover{grid-template-columns:.9fr 1.1fr;gap:32px;padding-top:0}.page{grid-template-columns:.42fr .58fr}.left{min-height:620px}.right{padding:64px}}
 @media(min-width:800px){
@@ -102,9 +145,46 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
   .ev-panel h2{font-size:30px}
   .ev-info{font-size:15px}
   .ev-desc,.ev-mapbox{display:block}
+  .orb-dock{top:max(24px,env(safe-area-inset-top));left:auto;right:40px;width:auto}
+  .orb-facts{grid-template-columns:1fr 1fr}
+  .orb-facts .more{display:block}
 }
 @media(min-width:800px) and (max-height:700px){.ev-desc{display:none}}
 @media(min-width:1024px){header,section{padding-left:64px;padding-right:64px}}
+/* Desktop: fit every page inside the window so nothing needs scrolling.
+   (On very short windows this switches off and normal scrolling returns.) */
+@media(min-width:768px) and (min-height:621px){
+  body{overflow:hidden;height:100dvh}
+  main{height:100dvh;min-height:0}
+  header{height:72px;padding-top:10px;padding-bottom:10px}
+  section{padding-top:8px;padding-bottom:20px}
+  #cover,#chapter,#planetview{min-height:0;height:calc(100dvh - 72px)}
+  h1{font-size:clamp(3rem,min(9vw,14dvh),8.5rem)}
+  .eyebrow{margin-bottom:clamp(12px,3dvh,28px)}
+  .lede{margin-top:clamp(14px,3dvh,32px);font-size:clamp(15px,2.3dvh,17px)}
+  .btn{margin-top:clamp(16px,4dvh,36px)}
+  .ages{margin-top:clamp(14px,3dvh,32px)}
+  .card{aspect-ratio:auto;height:min(calc(100dvh - 170px),640px)}
+  .coords{margin-top:12px}
+  .page{height:min(100%,740px);max-height:100%}
+  .left,.right{min-height:0;overflow:hidden}
+  .left{padding:clamp(22px,4dvh,40px);gap:16px}
+  .left h3{font-size:clamp(2.4rem,9dvh,3.75rem);margin-top:12px}
+  .rule{margin:clamp(14px,3dvh,32px) 0 clamp(10px,2dvh,20px)}
+  .right{padding:clamp(24px,5dvh,56px) clamp(32px,4vw,64px)}
+  .meta{margin-bottom:clamp(14px,4dvh,44px)}
+  .right h2{font-size:clamp(1.8rem,5.4dvh,3rem)}
+  .body{margin-top:clamp(12px,3dvh,28px);font-size:clamp(13px,2dvh,15px);line-height:1.7}
+  .body p+p{margin-top:clamp(10px,2dvh,18px)}
+  .note{margin-top:clamp(14px,3dvh,36px);padding-top:clamp(10px,2dvh,18px);font-size:clamp(13px,2dvh,14px)}
+  .foot{margin-top:clamp(14px,3dvh,40px);padding-top:clamp(10px,2dvh,18px)}
+  .facts{margin-top:clamp(12px,2.6dvh,24px);grid-template-columns:repeat(3,1fr);gap:clamp(8px,1.8dvh,14px)}
+  .obs{margin-top:clamp(12px,2.6dvh,24px);gap:10px}
+  .obs p{font-size:clamp(13px,2dvh,15px);line-height:1.6}
+  .empty,.gallery{margin-top:clamp(12px,2.6dvh,24px)}
+  #planetview .right{overflow-y:auto;scrollbar-width:none}
+  #planetview .right::-webkit-scrollbar{display:none}
+}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
@@ -193,7 +273,7 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
             <p>Someone looked at the Moon and wondered what it would feel like to stand there. That question traveled through classrooms, workshops, radio waves, and millions of hopeful minds.</p>
             <p>NASA is a collection of those questions made real — rovers that taste the soil of Mars, telescopes that see the first light in the universe, and people brave enough to try.</p>
           </div>
-          <p class="note">🔭 Turn the page to meet the missions that are changing what we know about home.</p>
+          <p class="note">🔭 Turn the page to explore the worlds around the Sun, then tap Earth to see it from a million miles away.</p>
         </div>
         <div class="foot">
           <button class="back" id="back" type="button">← Return to cover</button>
@@ -203,13 +283,67 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
     </div>
   </section>
 
-  <!-- PAGE 3: EARTH SLIDES -->
+  <!-- PAGE 3: SOLAR SYSTEM (3D) -->
+  <section id="orreryview">
+    <div class="bg" aria-hidden="true"><div class="stars"></div></div>
+    <div id="orb-canvas" aria-label="Interactive 3D solar system. Drag to rotate, pinch to zoom, tap a world."></div>
+    <div class="orb-labels" id="orb-labels"></div>
+    <div class="ev-top"><button class="ev-back" id="orb-back" type="button">← Back to story</button></div>
+    <div class="orb-dock" role="group" aria-label="View controls">
+      <button type="button" data-s="0">Pause</button>
+      <button type="button" data-s="0.6" class="on">1×</button>
+      <button type="button" data-s="3">5×</button>
+      <button type="button" id="orb-top">Top-down</button>
+      <button type="button" id="orb-reset">Reset</button>
+    </div>
+    <div class="ev-panel">
+      <div class="orb-pills" id="orb-pills" role="group" aria-label="Pick a world"></div>
+      <h2 id="orb-name"></h2>
+      <p class="ev-info" id="orb-desc"></p>
+      <div class="orb-facts" id="orb-facts"></div>
+      <button class="orb-cta" id="orb-cta" type="button"></button>
+      <p class="ev-hint">Drag to turn · pinch or scroll to zoom · tap a world</p>
+    </div>
+    <div id="orb-fallback"></div>
+  </section>
+
+  <!-- PAGE 4: PLANET PAGE (one template for every world) -->
+  <section id="planetview">
+    <div class="page">
+      <div class="left" id="pv-left">
+        <div class="sm" style="color:#ffbf70">📖 Observation file</div>
+        <div>
+          <div class="mono sm" id="pv-ref" style="color:#b8dfff;letter-spacing:.25em"></div>
+          <h3 class="serif" id="pv-name"></h3>
+          <div class="rule"></div>
+          <p id="pv-desc"></p>
+        </div>
+        <div class="mono sm" style="display:flex;justify-content:space-between;font-size:9px;color:#9ed8ef"><span>NASA archives</span><span id="pv-count"></span></div>
+      </div>
+      <div class="right">
+        <div>
+          <div class="meta"><span>Field note</span><span id="pv-meta"></span></div>
+          <h2 class="serif" id="pv-title"></h2>
+          <div class="facts" id="pv-facts"></div>
+          <div class="obs" id="pv-obs"></div>
+          <div id="pv-gallery"></div>
+        </div>
+        <div class="foot">
+          <a class="back" id="pv-back" href="#orrery">← Solar system</a>
+          <a class="back" id="pv-prev" href="#orrery">← Previous</a>
+          <a class="back go" id="pv-next" href="#orrery">Next →</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PAGE 5: EARTH SLIDES -->
   <section id="earthview">
     <div class="ev-bg" id="earth" role="img" aria-label="Photos of Earth from the DSCOVR spacecraft">
       <div class="ev-status" id="status">Loading pictures…</div>
     </div>
     <div class="ev-shade"></div>
-    <div class="ev-top"><button class="ev-back" id="evback" type="button">← Back to story</button></div>
+    <div class="ev-top"><button class="ev-back" id="evback" type="button">← Back to solar system</button></div>
     <div class="ev-panel">
       <h2 id="title">Earth, from a million miles away</h2>
       <p class="ev-info" id="text"></p>
@@ -241,35 +375,510 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
   </section>
 </main>
 
+<div id="fade"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-/* ---------- Page switching ---------- */
+/* =====================================================================
+   1. PLANET DATA  –  edit or add worlds here.
+   observations: [{title, text}]   images: [{src, alt, caption}]
+   page: where "See observations" goes. Default is the shared planet page
+         ("#planet/<id>"). Earth uses the photo slides ("#earth").
+         Use false to hide the button, or a full URL for an outside page.
+   distScale / speed / radius / color only control the 3D view.
+   ===================================================================== */
+var BODIES = [
+  { id: "sun", name: "Sol (The Sun)", desc: "A G-type yellow dwarf and the gravitational anchor of the system.", radius: 11, color: 0xe65100,
+    semiMajor: "0.00 AU", vel: "0 km/s", period: "n/a", mass: "1.989 × 10³⁰ kg", temp: "5,500°C", atmo: "Hydrogen 73%, Helium 25%",
+    observations: [
+      { title: "Solar Dynamics Observatory", text: "Watches the Sun in extreme ultraviolet light around the clock, tracking flares and eruptions." },
+      { title: "Parker Solar Probe", text: "The first spacecraft to fly through the Sun's corona, sampling the solar wind at its source." }
+    ], images: [] },
+  { id: "mercury", name: "Mercury", desc: "The swift scorch: a heavily cratered, airless world closest to the Sun.", distScale: 24, radius: 1.8, color: 0x8b8f98, speed: 0.045,
+    semiMajor: "0.39 AU", vel: "47.36 km/s", period: "87.97 d", mass: "3.301 × 10²³ kg", temp: "-180 to 430°C", atmo: "Trace oxygen, sodium, hydrogen",
+    observations: [
+      { title: "MESSENGER", text: "Orbited Mercury from 2011 to 2015 and mapped the entire surface for the first time." },
+      { title: "BepiColombo", text: "A joint ESA and JAXA mission scheduled to enter orbit around Mercury in late 2026." }
+    ], images: [] },
+  { id: "venus", name: "Venus", desc: "The veiled inferno, wrapped in clouds over 92 bar of CO₂.", distScale: 36, radius: 2.7, color: 0xe0a34a, speed: 0.028,
+    semiMajor: "0.72 AU", vel: "35.02 km/s", period: "224.7 d", mass: "4.867 × 10²⁴ kg", temp: "465°C", atmo: "CO₂ 96.5%, Nitrogen 3.5%",
+    observations: [
+      { title: "Magellan", text: "Radar-mapped about 98% of the surface through the clouds in the early 1990s." },
+      { title: "Venera 7", text: "In 1970 it became the first spacecraft to transmit data from the surface of another planet." }
+    ], images: [] },
+  { id: "earth", name: "Earth (Terra)", desc: "Our ocean world, and the only known place with life.", distScale: 52, radius: 3.2, color: 0x2563eb, speed: 0.020, hasMoon: true, page: "#earth",
+    semiMajor: "1.00 AU", vel: "29.78 km/s", period: "365.25 d", mass: "5.972 × 10²⁴ kg", temp: "-88 to 58°C", atmo: "Nitrogen 78%, Oxygen 21%",
+    observations: [], images: [] },
+  { id: "mars", name: "Mars", desc: "The rust world, home to Olympus Mons and polar ice caps.", distScale: 70, radius: 2.3, color: 0xc4552f, speed: 0.015,
+    semiMajor: "1.52 AU", vel: "24.07 km/s", period: "686.98 d", mass: "6.417 × 10²³ kg", temp: "-140 to 20°C", atmo: "CO₂ 95%, Nitrogen 2.6%",
+    observations: [
+      { title: "Perseverance", text: "Has been collecting rock samples in Jezero crater since landing in 2021." },
+      { title: "Mars Reconnaissance Orbiter", text: "Has photographed the surface in fine detail from orbit since 2006." }
+    ], images: [] },
+  { id: "jupiter", name: "Jupiter", desc: "The king of storms, with 95 known moons and the Great Red Spot.", distScale: 96, radius: 7.2, color: 0xc88b3a, speed: 0.009,
+    semiMajor: "5.20 AU", vel: "13.07 km/s", period: "11.86 yrs", mass: "1.898 × 10²⁷ kg", temp: "-110°C", atmo: "Hydrogen 90%, Helium 10%",
+    observations: [
+      { title: "Juno", text: "Arrived in 2016 and has mapped Jupiter's gravity, magnetic field and deep atmosphere." },
+      { title: "Europa Clipper", text: "Launched in 2024 to study Jupiter's ice-covered moon Europa." }
+    ], images: [] },
+  { id: "saturn", name: "Saturn", desc: "The jewel of the ring, circled by a vast system of ice.", distScale: 124, radius: 6.0, color: 0xe3c88a, speed: 0.0065, hasRings: true,
+    semiMajor: "9.58 AU", vel: "9.68 km/s", period: "29.46 yrs", mass: "5.683 × 10²⁶ kg", temp: "-140°C", atmo: "Hydrogen 96%, Helium 3%",
+    observations: [
+      { title: "Cassini", text: "Orbited Saturn from 2004 to 2017 and ended its mission with a dive into the atmosphere." },
+      { title: "Enceladus plumes", text: "Cassini found jets of water ice erupting from the small moon's south pole." }
+    ], images: [] },
+  { id: "uranus", name: "Uranus", desc: "The tilted ice giant, rolling around the Sun on a 97.8° axis.", distScale: 150, radius: 4.4, color: 0x7fd3de, speed: 0.0045,
+    semiMajor: "19.2 AU", vel: "6.80 km/s", period: "84.01 yrs", mass: "8.681 × 10²⁵ kg", temp: "-195°C", atmo: "Hydrogen 83%, Helium 15%, Methane 2%",
+    observations: [
+      { title: "Voyager 2", text: "The only spacecraft to visit Uranus, flying past in January 1986." }
+    ], images: [] },
+  { id: "neptune", name: "Neptune", desc: "The azure tempest, with supersonic winds up to 2,100 km/h.", distScale: 174, radius: 4.2, color: 0x3a63d8, speed: 0.0035,
+    semiMajor: "30.1 AU", vel: "5.43 km/s", period: "164.8 yrs", mass: "1.024 × 10²⁶ kg", temp: "-201°C", atmo: "Hydrogen 80%, Helium 19%, Methane 1.5%",
+    observations: [
+      { title: "Voyager 2", text: "Flew past in August 1989 and revealed the Great Dark Spot and Neptune's fast winds." }
+    ], images: [] }
+];
+BODIES.forEach(function (b) { if (b.page === undefined) { b.page = "#planet/" + b.id; } });
+
+function byId(id) { for (var i = 0; i < BODIES.length; i++) { if (BODIES[i].id === id) { return BODIES[i]; } } return null; }
+function shortName(b) { return b.name.split(" (")[0]; }
+function hex(c) { return "#" + c.toString(16).padStart(6, "0"); }
+function pageOf(b) { return b.page || "#orrery"; }
+
+/* ---------- Page switching + routing (each page has its own #address) ---------- */
 var $ = function (id) { return document.getElementById(id); };
 var cover = $("cover"), chapter = $("chapter"), earthview = $("earthview");
+var orreryview = $("orreryview"), planetview = $("planetview"), fade = $("fade");
 var current = "cover";
+var PARENT = { chapter: "cover", orrery: "chapter", planet: "orrery", earth: "orrery" };
+
+function nav(h) { if (location.hash === h) { route(); } else { location.hash = h; } }
 
 function show(name) {
   current = name;
   cover.style.display = name === "cover" ? "" : "none";
   chapter.style.display = name === "chapter" ? "flex" : "none";
+  orreryview.style.display = name === "orrery" ? "block" : "none";
+  planetview.style.display = name === "planet" ? "flex" : "none";
   earthview.style.display = name === "earth" ? "block" : "none";
   chapter.classList.toggle("rise", name === "chapter");
-  document.body.classList.toggle("lock", name === "earth");
+  planetview.classList.toggle("rise", name === "planet");
+  document.body.classList.toggle("lock", name === "earth" || name === "orrery");
+  fade.classList.remove("on");
   window.scrollTo(0, 0);
   if (name === "earth") { enterEarth(); } else { clearTimeout(timer); }
+  if (name === "orrery") { Orrery.enter(); } else { Orrery.leave(); }
 }
-$("begin").onclick = function () { show("chapter"); };
-$("back").onclick = function () { show("cover"); };
-$("turn").onclick = function () { show("earth"); };
-$("evback").onclick = function () { show("chapter"); };
+
+function route() {
+  var p = (location.hash || "").replace(/^#\/?/, "").split("/");
+  var name = p[0] || "cover";
+  if (name === "planet") {
+    var b = byId(p[1]);
+    if (!b) { name = "orrery"; } else { renderPlanet(b); }
+  } else if (["cover", "chapter", "orrery", "earth"].indexOf(name) < 0) {
+    name = "cover";
+  }
+  show(name);
+}
+window.addEventListener("hashchange", route);
+
+$("begin").onclick = function () { nav("#chapter"); };
+$("back").onclick = function () { nav("#cover"); };
+$("turn").onclick = function () { nav("#orrery"); };
+$("orb-back").onclick = function () { nav("#chapter"); };
+$("evback").onclick = function () { nav("#orrery"); };
 document.addEventListener("keydown", function (e) {
-  if (e.key === "Escape") { show(current === "earth" ? "chapter" : "cover"); }
+  if (e.key === "Escape" && PARENT[current]) { nav("#" + PARENT[current]); return; }
   if (current !== "earth") { return; }
   if (e.key === " " && e.target === document.body) { e.preventDefault(); setAuto(!auto); }
   if (e.key === "ArrowLeft") { go(idx - 1); }
   if (e.key === "ArrowRight") { go(idx + 1); }
 });
 
-/* ---------- Earth data (NASA DSCOVR EPIC) ---------- */
+/* ---------- Planet page (one template for every world) ---------- */
+function renderPlanet(b) {
+  var i = BODIES.indexOf(b), n = BODIES.length;
+  var prev = BODIES[(i - 1 + n) % n], next = BODIES[(i + 1) % n];
+  var nm = shortName(b);
+
+  $("pv-left").style.background =
+    "radial-gradient(circle at 28% 18%, rgba(255,255,255,.22), transparent 42%), linear-gradient(145deg, " + hex(b.color) + " -20%, #1a2f6c 62%, #3a2a78)";
+  $("pv-ref").textContent = "Entry / " + b.semiMajor + " from the Sun";
+  $("pv-name").textContent = nm;
+  $("pv-desc").textContent = b.desc;
+  $("pv-count").textContent = String(i + 1).padStart(2, "0") + " / " + String(n).padStart(2, "0");
+  $("pv-meta").textContent = "Orbit: " + b.period;
+  $("pv-title").innerHTML = nm + ", as our <em>machines</em> see it";
+  document.title = nm + " — A storybook by NASA";
+
+  $("pv-facts").innerHTML = [
+    ["Distance", b.semiMajor], ["Orbital speed", b.vel], ["Orbital period", b.period],
+    ["Mass", b.mass], ["Surface temp", b.temp], ["Atmosphere", b.atmo]
+  ].map(function (f) { return "<div><span>" + f[0] + "</span>" + f[1] + "</div>"; }).join("");
+
+  $("pv-obs").innerHTML = (b.observations || []).map(function (o) {
+    return "<p><b>" + o.title + ".</b> " + o.text + "</p>";
+  }).join("");
+
+  $("pv-gallery").innerHTML = (b.images && b.images.length)
+    ? "<div class=\"gallery\">" + b.images.map(function (im) {
+        return "<figure><img src=\"" + im.src + "\" alt=\"" + (im.alt || "") + "\" loading=\"lazy\"><figcaption>" + (im.caption || "") + "</figcaption></figure>";
+      }).join("") + "</div>"
+    : "<p class=\"empty\">No photos yet. Add them under <span class=\"mono\">images</span> for " + nm + " in the BODIES list.</p>";
+
+  $("pv-prev").href = pageOf(prev); $("pv-prev").textContent = "← " + shortName(prev);
+  $("pv-next").href = pageOf(next); $("pv-next").textContent = shortName(next) + " →";
+}
+
+/* =====================================================================
+   2. SOLAR SYSTEM (3D)
+   ===================================================================== */
+var Orrery = (function () {
+  var host = $("orb-canvas"), labelsEl = $("orb-labels");
+  var cur = byId("earth"), speed = 0.6;
+  var inited = false, active = false, looping = false, leaving = false;
+  var scene, camera, renderer, clock;
+  var groups = {}, hits = [], orbiters = [], lines = {}, moon = null, moonAngle = 0;
+  var radius = 260, want = 260, polar = Math.PI / 3.8, azimuth = Math.PI / 4.5, follow = null;
+  var target, origin, ray, ndc;
+  var pointers = new Map(), down = null, pinch = 0;
+  var MIN_R = 25, MAX_R = 900;
+
+  function clamp(v, a, z) { return Math.max(a, Math.min(z, v)); }
+  function homeR() {
+    var a = host.clientWidth / Math.max(1, host.clientHeight);
+    return Math.min(MAX_R, 260 * Math.max(1, 0.85 / a));
+  }
+
+  /* ----- procedural textures (no image files needed) ----- */
+  function rng(seed) { var s = seed; return function () { s = (s * 16807) % 2147483647; return s / 2147483647; }; }
+  function makeTexture(b) {
+    var W = 512, H = 256, c = document.createElement("canvas");
+    c.width = W; c.height = H;
+    var x = c.getContext("2d"), r = rng(b.id.length * 7919 + b.id.charCodeAt(0));
+    x.fillStyle = hex(b.color); x.fillRect(0, 0, W, H);
+    function bands(palette, wobble) {
+      for (var y = 0; y < H; y += 2) {
+        var n = (Math.sin(y * 0.09) + Math.sin(y * 0.23 + 1.7) * 0.6 + Math.sin(y * 0.51) * 0.25 + 1.85) / 3.7;
+        x.fillStyle = palette[Math.min(palette.length - 1, Math.floor(n * palette.length))];
+        x.globalAlpha = 0.85;
+        for (var px = 0; px < W; px += 16) { x.fillRect(px, y + Math.sin(px * 0.05 + y) * wobble, 17, 3); }
+      }
+      x.globalAlpha = 1;
+    }
+    function spots(n, minR, maxR, colors, alpha) {
+      for (var i = 0; i < n; i++) {
+        x.fillStyle = colors[Math.floor(r() * colors.length)]; x.globalAlpha = alpha;
+        x.beginPath(); x.arc(r() * W, r() * H, minR + r() * (maxR - minR), 0, 7); x.fill();
+      }
+      x.globalAlpha = 1;
+    }
+    if (b.id === "earth") {
+      x.fillStyle = "#1d5fc1"; x.fillRect(0, 0, W, H);
+      spots(70, 14, 44, ["#3f8f4a", "#4d9a52", "#b9a76a"], 1);
+      spots(30, 6, 18, ["#2e7a3e", "#8c7a4a"], 0.9);
+      x.fillStyle = "#f4f8ff"; x.fillRect(0, 0, W, 14); x.fillRect(0, H - 16, W, 16);
+      for (var i = 0; i < 60; i++) {
+        x.fillStyle = "rgba(255,255,255,.45)"; x.beginPath();
+        x.ellipse(r() * W, r() * H, 20 + r() * 50, 3 + r() * 6, 0, 0, 7); x.fill();
+      }
+    } else if (b.id === "jupiter") {
+      bands(["#f2dfc0", "#d9a86a", "#b4753a", "#e8c796", "#9a5f30"], 3);
+      x.fillStyle = "#b5472b"; x.beginPath(); x.ellipse(370, 168, 30, 15, 0, 0, 7); x.fill();
+    } else if (b.id === "saturn") {
+      bands(["#f0dfb4", "#dcc28a", "#c9ab72", "#ead7a2"], 2);
+    } else if (b.id === "uranus") {
+      bands(["#8fdbe5", "#7fd3de", "#9de2ea"], 1);
+    } else if (b.id === "neptune") {
+      bands(["#3a63d8", "#2f55c4", "#4a74e6"], 1);
+    } else if (b.id === "venus") {
+      bands(["#f0c070", "#dba24a", "#e8b765", "#c98d3a"], 6);
+    } else if (b.id === "mars") {
+      spots(60, 6, 30, ["#a8432a", "#d0663c", "#8f3a26"], 0.55);
+      x.fillStyle = "#f3f0ea"; x.fillRect(0, 0, W, 10); x.fillRect(0, H - 10, W, 10);
+    } else if (b.id === "mercury") {
+      spots(120, 2, 14, ["#6b6f78", "#a5a8b0", "#7a7e86"], 0.6);
+    } else {
+      spots(40, 4, 22, ["#9a6a2a", "#c98d3a"], 0.5);   // fallback for any world you add
+    }
+    var t = new THREE.CanvasTexture(c);
+    t.anisotropy = 4;
+    return t;
+  }
+  function glowTexture() {
+    var c = document.createElement("canvas"); c.width = c.height = 256;
+    var x = c.getContext("2d"), g = x.createRadialGradient(128, 128, 0, 128, 128, 128);
+    g.addColorStop(0, "rgba(255,230,150,1)"); g.addColorStop(0.35, "rgba(255,160,50,.5)"); g.addColorStop(1, "rgba(255,140,40,0)");
+    x.fillStyle = g; x.fillRect(0, 0, 256, 256);
+    return new THREE.CanvasTexture(c);
+  }
+
+  /* ----- panel, pills and labels (plain HTML, no 3D needed) ----- */
+  BODIES.forEach(function (b) {
+    var p = document.createElement("button");
+    p.type = "button"; p.dataset.id = b.id;
+    p.innerHTML = "<i style=\"background:" + hex(b.color) + "\"></i>" + shortName(b);
+    p.onclick = function () { select(b); };
+    $("orb-pills").appendChild(p);
+
+    var l = document.createElement("span");
+    l.className = "orb-label"; l.id = "olbl-" + b.id; l.textContent = shortName(b);
+    labelsEl.appendChild(l);
+  });
+
+  function panel() {
+    $("orb-name").textContent = cur.name;
+    $("orb-desc").textContent = cur.desc;
+    $("orb-facts").innerHTML = [
+      ["Distance", cur.semiMajor], ["Speed", cur.vel], ["Year", cur.period],
+      ["Mass", cur.mass, 1], ["Surface", cur.temp, 1]
+    ].map(function (f) { return "<div" + (f[2] ? " class=\"more\"" : "") + "><span>" + f[0] + "</span>" + f[1] + "</div>"; }).join("");
+    var cta = $("orb-cta");
+    cta.style.display = cur.page === false ? "none" : "";
+    cta.textContent = "See " + shortName(cur) + " observations →";
+    Array.prototype.forEach.call($("orb-pills").children, function (p) { p.classList.toggle("on", p.dataset.id === cur.id); });
+    Array.prototype.forEach.call(labelsEl.children, function (l) { l.classList.toggle("on", l.id === "olbl-" + cur.id); });
+    Object.keys(lines).forEach(function (id) {
+      var on = id === cur.id;
+      lines[id].material.color.set(on ? 0xffd66b : 0x6f9fe0);
+      lines[id].material.opacity = on ? 0.95 : 0.35;
+    });
+  }
+
+  function select(b) {
+    if (leaving) { return; }
+    cur = b;
+    panel();
+    follow = groups[b.id] || null;
+    want = b.id === "sun" ? 130 : clamp(b.radius * 7 + 22, 45, 120);
+  }
+
+  /* "See observations": fly in, fade, then change page */
+  $("orb-cta").onclick = function () {
+    if (leaving || cur.page === false) { return; }
+    leaving = true;
+    follow = groups[cur.id] || null;
+    want = cur.radius * 3 + 6;
+    var dest = cur.page;
+    setTimeout(function () { fade.classList.add("on"); }, 600);
+    setTimeout(function () {
+      if (dest.charAt(0) === "#") { nav(dest); } else { location.assign(dest); }
+    }, 1200);
+  };
+
+  Array.prototype.forEach.call(document.querySelectorAll(".orb-dock [data-s]"), function (btn) {
+    btn.onclick = function () {
+      speed = parseFloat(btn.getAttribute("data-s"));
+      Array.prototype.forEach.call(document.querySelectorAll(".orb-dock [data-s]"), function (b) { b.classList.toggle("on", b === btn); });
+    };
+  });
+  $("orb-reset").onclick = function () { if (leaving) { return; } follow = null; want = homeR(); polar = Math.PI / 3.8; azimuth = Math.PI / 4.5; };
+  $("orb-top").onclick = function () { if (leaving) { return; } follow = null; want = Math.min(MAX_R, homeR() * 1.05); polar = 0.08; };
+
+  window.addEventListener("pageshow", function () { fade.classList.remove("on"); leaving = false; });
+
+  /* ----- build the 3D scene (first visit only) ----- */
+  function init() {
+    inited = true;
+    scene = new THREE.Scene();
+    camera = new THREE.PerspectiveCamera(45, 1, 0.1, 3000);
+    renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setClearColor(0x000000, 0);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    host.appendChild(renderer.domElement);
+    clock = new THREE.Clock();
+    target = new THREE.Vector3(); origin = new THREE.Vector3();
+    ray = new THREE.Raycaster(); ndc = new THREE.Vector2();
+
+    scene.add(new THREE.AmbientLight(0xbcd4ff, 0.75));
+    scene.add(new THREE.PointLight(0xfff0cc, 2.1, 0));
+    var grid = new THREE.PolarGridHelper(190, 8, 8, 64, 0x24468f, 0x17306b);
+    grid.position.y = -0.5;
+    scene.add(grid);
+
+    BODIES.forEach(function (b, idx) {
+      var g = new THREE.Group();
+      scene.add(g);
+      groups[b.id] = g;
+      var isSun = b.id === "sun";
+
+      var body = new THREE.Mesh(
+        new THREE.SphereGeometry(b.radius, 48, 48),
+        isSun ? new THREE.MeshBasicMaterial({ color: 0xffb347 }) : new THREE.MeshStandardMaterial({ map: makeTexture(b), roughness: 0.8, metalness: 0 })
+      );
+      g.add(body);
+
+      var hit = new THREE.Mesh(new THREE.SphereGeometry(Math.max(b.radius * 1.6, 5), 12, 12), new THREE.MeshBasicMaterial({ visible: false }));
+      hit.userData.id = b.id;
+      g.add(hit);
+      hits.push(hit);
+
+      if (isSun) {
+        var glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture(), depthWrite: false, transparent: true, blending: THREE.AdditiveBlending }));
+        glow.scale.setScalar(72);
+        g.add(glow);
+        return;
+      }
+
+      var pts = [];
+      for (var i = 0; i <= 160; i++) {
+        var t = (i / 160) * Math.PI * 2;
+        pts.push(new THREE.Vector3(Math.cos(t) * b.distScale, 0, Math.sin(t) * b.distScale));
+      }
+      var line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: 0x6f9fe0, transparent: true, opacity: 0.35 }));
+      scene.add(line);
+      lines[b.id] = line;
+
+      if (b.hasRings) {
+        var rg = new THREE.Group();
+        [[1.3, 1.65, 0.85, 0xe8d3a0], [1.7, 2.0, 0.55, 0xc9ab72], [2.05, 2.4, 0.7, 0xdcc28a]].forEach(function (q) {
+          var m = new THREE.Mesh(new THREE.RingGeometry(b.radius * q[0], b.radius * q[1], 64), new THREE.MeshBasicMaterial({ color: q[3], side: THREE.DoubleSide, transparent: true, opacity: q[2] }));
+          m.rotation.x = Math.PI / 2;
+          rg.add(m);
+        });
+        rg.rotation.z = 0.4; rg.rotation.x = 0.35;
+        g.add(rg);
+      }
+      if (b.hasMoon) {
+        moon = new THREE.Mesh(new THREE.SphereGeometry(0.85, 20, 20), new THREE.MeshStandardMaterial({ color: 0xcfd6e4, roughness: 1 }));
+        g.add(moon);
+      }
+      if (b.id === "earth") {
+        g.add(new THREE.Mesh(new THREE.SphereGeometry(b.radius * 1.12, 32, 32), new THREE.MeshBasicMaterial({ color: 0x7fc4ff, transparent: true, opacity: 0.25, side: THREE.BackSide })));
+      }
+
+      var angle = (idx - 1) * 0.9 + 0.4;
+      g.position.set(Math.cos(angle) * b.distScale, 0, Math.sin(angle) * b.distScale);
+      orbiters.push({ b: b, g: g, body: body, angle: angle });
+    });
+
+    /* pointer input: drag turns, pinch zooms, a quick tap picks */
+    function pinchDist() { var v = Array.from(pointers.values()); return Math.hypot(v[0].x - v[1].x, v[0].y - v[1].y); }
+    function pickAt(x, y) {
+      var r = host.getBoundingClientRect();
+      ndc.set(((x - r.left) / r.width) * 2 - 1, -((y - r.top) / r.height) * 2 + 1);
+      ray.setFromCamera(ndc, camera);
+      var h = ray.intersectObjects(hits, false)[0];
+      return h ? byId(h.object.userData.id) : null;
+    }
+    host.addEventListener("pointerdown", function (e) {
+      host.setPointerCapture(e.pointerId);
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 1) { down = { x: e.clientX, y: e.clientY, t: performance.now(), moved: false }; host.classList.add("drag"); }
+      else { down = null; pinch = pinchDist(); }
+    });
+    host.addEventListener("pointermove", function (e) {
+      var p = pointers.get(e.pointerId);
+      if (!p) {
+        if (e.pointerType === "mouse") { host.classList.toggle("hot", !!pickAt(e.clientX, e.clientY)); }
+        return;
+      }
+      if (pointers.size === 1) {
+        azimuth -= (e.clientX - p.x) * 0.007;
+        polar = clamp(polar - (e.clientY - p.y) * 0.007, 0.08, Math.PI / 2.05);
+        if (down && Math.hypot(e.clientX - down.x, e.clientY - down.y) > 8) { down.moved = true; }
+      }
+      p.x = e.clientX; p.y = e.clientY;
+      if (pointers.size === 2) {
+        var d = pinchDist();
+        want = clamp(want * (pinch / d), MIN_R, MAX_R);
+        pinch = d;
+      }
+    });
+    function endPointer(e) {
+      if (down && !down.moved && e.type === "pointerup" && performance.now() - down.t < 500) {
+        var b = pickAt(e.clientX, e.clientY);
+        if (b) { select(b); }
+      }
+      pointers.delete(e.pointerId);
+      down = null;
+      if (!pointers.size) { host.classList.remove("drag"); }
+    }
+    host.addEventListener("pointerup", endPointer);
+    host.addEventListener("pointercancel", endPointer);
+    host.addEventListener("wheel", function (e) { e.preventDefault(); want = clamp(want + e.deltaY * 0.25 * (want / 260), MIN_R, MAX_R); }, { passive: false });
+
+    if (window.ResizeObserver) { new ResizeObserver(resize).observe(host); } else { window.addEventListener("resize", resize); }
+  }
+
+  function resize() {
+    if (!renderer) { return; }
+    var w = host.clientWidth, h = host.clientHeight;
+    if (!w || !h) { return; }
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    // on wide screens the info panel covers the left side, so shift the 3D view to the right
+    if (w >= 800) { camera.setViewOffset(w, h, -190, 0, w, h); } else { camera.clearViewOffset(); }
+    camera.updateProjectionMatrix();
+  }
+
+  function labels() {
+    var w = host.clientWidth, h = host.clientHeight, v = new THREE.Vector3();
+    BODIES.forEach(function (b) {
+      var el = $("olbl-" + b.id);
+      v.copy(groups[b.id].position); v.y += b.radius + 2.5; v.project(camera);
+      if (v.z > 1) { el.style.display = "none"; return; }
+      el.style.display = "";
+      el.style.transform = "translate(" + ((v.x * 0.5 + 0.5) * w) + "px," + ((-v.y * 0.5 + 0.5) * h) + "px) translate(-50%,-100%)";
+    });
+  }
+
+  function tick() {
+    if (!active) { looping = false; return; }
+    requestAnimationFrame(tick);
+    var dt = Math.min(clock.getDelta(), 0.1);
+
+    orbiters.forEach(function (o) {
+      o.angle += o.b.speed * speed * 3 * dt;
+      o.g.position.set(Math.cos(o.angle) * o.b.distScale, 0, Math.sin(o.angle) * o.b.distScale);
+      o.body.rotation.y += 0.8 * dt;
+    });
+    if (moon && speed > 0) {
+      moonAngle += 2.4 * dt * (speed / 0.6);
+      moon.position.set(Math.cos(moonAngle) * 6.8, 0.4, Math.sin(moonAngle) * 6.8);
+    }
+
+    var k = 1 - Math.pow(0.001, dt);
+    target.lerp(follow ? follow.position : origin, k);
+    radius += (want - radius) * k;
+    camera.position.set(
+      target.x + radius * Math.sin(polar) * Math.sin(azimuth),
+      target.y + radius * Math.cos(polar),
+      target.z + radius * Math.sin(polar) * Math.cos(azimuth)
+    );
+    camera.lookAt(target);
+    labels();
+    renderer.render(scene, camera);
+  }
+
+  function enter() {
+    if (typeof THREE === "undefined") {
+      var fb = $("orb-fallback");
+      fb.innerHTML = "The 3D view could not load (it needs an internet connection). You can still open any world:<br>" +
+        BODIES.map(function (b) { return "<a href=\"" + pageOf(b) + "\">" + shortName(b) + "</a>"; }).join("");
+      fb.style.display = "block";
+      return;
+    }
+    var first = !inited;
+    if (first) { init(); }
+    resize();
+    leaving = false;
+    follow = null;
+    if (first) { radius = want = homeR(); } else { want = homeR(); }
+    panel();
+    active = true;
+    clock.getDelta();
+    if (!looping) { looping = true; tick(); }
+  }
+  function leave() { active = false; }
+
+  return { enter: enter, leave: leave };
+})();
+
+/* =====================================================================
+   3. EARTH PHOTO SLIDES (NASA DSCOVR EPIC)
+   ===================================================================== */
 var observations = [
   { id: "20260926004554", image: "epic_1b_20260926004554", date: "2026-09-26 00:41:06", lat: 5.456543, lon: 165.622559 },
   { id: "20260926023357", image: "epic_1b_20260926023357", date: "2026-09-26 02:29:08", lat: 5.493164, lon: 138.515625 },
@@ -436,6 +1045,7 @@ earthEl.addEventListener("wheel", function (e) {
 
 render(true);
 setTimeout(loadPictures, 300);
+route();   // open whichever page the address asks for (the cover by default)
 </script>
 </body>
 </html>
