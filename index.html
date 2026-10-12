@@ -3,6 +3,18 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script>
+/* Phones (700px wide or less) are sent to mobile.html, but only if that file really exists
+   on the site (so you never land on a 404). Add ?desktop to the address to stay here. */
+(function () {
+  if (location.protocol.indexOf("http") !== 0) { return; }
+  if (window.matchMedia("(max-width:700px)").matches && location.search.indexOf("desktop") < 0) {
+    fetch("mobile.html", { method: "HEAD" }).then(function (r) {
+      if (r.ok) { location.replace("mobile.html" + location.hash); }
+    }).catch(function () {});
+  }
+})();
+</script>
 <title>A storybook by NASA</title>
 <style>
 *{box-sizing:border-box;margin:0}
