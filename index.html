@@ -198,7 +198,60 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
   #planetview .right::-webkit-scrollbar{display:none}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-</style>
+/* ===== Earth dossier (Part I + Part II) ===== */
+.ed{display:none;position:fixed;inset:0;z-index:10;overflow-y:auto;margin:0;padding:0;max-width:none;background:#f8f9ff;color:#121c28;font:15px/1.6 system-ui,-apple-system,Segoe UI,sans-serif}
+.ed-top{position:sticky;top:0;z-index:3;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:calc(10px + env(safe-area-inset-top)) 20px 10px;background:rgba(248,249,255,.92);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid #e9ecef}
+.ed-top b{font:500 20px Georgia,serif;color:#002869}
+.ed-tabs{display:flex;gap:4px;padding:4px;background:#f1f3f5;border-radius:8px}
+.ed-tabs a{padding:6px 12px;border-radius:6px;color:#434652;text-decoration:none;font:500 11px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase}
+.ed-tabs a.on{background:#0b3d91;color:#fff}
+.ed-acts{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.ed a{color:#006398}
+.ed-link{font:600 14px system-ui,sans-serif;text-decoration:none}
+.ed-cta{display:inline-block;background:#002869;color:#fff!important;border-radius:8px;padding:10px 16px;text-decoration:none;font:600 13px system-ui,sans-serif}
+.ed-cta small{display:block;font:400 11px system-ui,sans-serif;opacity:.8;margin-top:2px}
+.ed-wrap{display:grid;gap:14px;padding:14px 20px 0}
+.ed-wrap:last-child{padding-bottom:28px}
+.ed-card{background:#fff;border-radius:8px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.07)}
+.ed-lab{display:block;font:10px ui-monospace,Menlo,monospace;letter-spacing:.1em;text-transform:uppercase;color:#434652}
+.ed h1{font:400 clamp(28px,4vw,40px)/1.2 Georgia,serif;letter-spacing:-.01em;color:#002869;margin:4px 0}
+.ed h2{font:500 21px/1.3 Georgia,serif;letter-spacing:0;color:#002869;margin:2px 0 4px}
+.ed p{font-size:13px;line-height:1.55;color:#434652}
+.ed-head{display:grid;gap:14px}
+@media(min-width:1000px){.ed-head{grid-template-columns:1.6fr 1fr;align-items:center}}
+.ed-q{background:#f8f9fa;border-radius:6px;padding:12px;font:italic 500 17px/1.4 Georgia,serif;color:#1f2937}
+.ed-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px}
+.ed-val{display:block;margin-top:4px;font:600 14px ui-monospace,Menlo,monospace;color:#002869}
+.ed-sub{font-size:12px;color:#434652}
+.ed-stage{display:grid;gap:14px}
+@media(min-width:1000px){.ed-stage{grid-template-columns:3fr 6fr 3fr}}
+.ed-comp{padding:6px;border-radius:6px;cursor:pointer;margin-top:4px}
+.ed-comp:hover{background:#f1f3f5}
+.ed-row2{display:flex;justify-content:space-between;font:11px ui-monospace,Menlo,monospace}
+.ed-track{height:8px;margin-top:4px;border-radius:99px;background:#eef4ff;overflow:hidden}
+.ed-track i{display:block;height:100%;background:#0b3d91}
+.ed-focus{margin-top:12px;padding:10px;border-radius:6px;background:#f1f3f5;font-size:13px;color:#434652}
+.ed-view{display:flex;flex-direction:column;background:#27313e;color:#eaf1ff;border-radius:8px;overflow:hidden}
+.ed-vh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;font:10px ui-monospace,Menlo,monospace;letter-spacing:.08em;text-transform:uppercase}
+.ed-globe{position:relative;width:min(92%,460px);aspect-ratio:1;margin:6px auto 12px}
+.ed-globe img{display:block;width:100%;height:100%;object-fit:cover;border-radius:50%;box-shadow:0 0 40px rgba(59,130,246,.5)}
+.ed-ret{position:absolute;inset:0;border:1px dashed rgba(34,211,238,.5);border-radius:50%;pointer-events:none;background:linear-gradient(rgba(34,211,238,.35),rgba(34,211,238,.35)) center/1px 100% no-repeat,linear-gradient(rgba(34,211,238,.35),rgba(34,211,238,.35)) center/100% 1px no-repeat}
+.ed-pin{position:absolute;width:44px;height:44px;margin:-22px;padding:0;border:0;border-radius:50%;background:transparent;cursor:pointer}
+.ed-pin::after{content:"";position:absolute;inset:15px;border-radius:50%;background:#dc2626;box-shadow:0 0 0 3px rgba(255,255,255,.8)}
+.ed-target{margin:0 12px;padding:10px;border-radius:8px;background:rgba(255,255,255,.1);font:12px ui-monospace,Menlo,monospace}
+.ed-bar{display:flex;gap:6px;flex-wrap:wrap;padding:12px}
+.ed-b{border:0;border-radius:6px;padding:10px 12px;min-height:40px;background:rgba(255,255,255,.12);color:#eaf1ff;cursor:pointer;font:500 11px ui-monospace,Menlo,monospace;text-transform:uppercase}
+.ed-b.on{background:#006398}
+.ed-read{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:6px;padding:8px;border-radius:6px;background:#f8f9fa;font:11px ui-monospace,Menlo,monospace}
+.ed-read b{color:#002869}
+.ed-grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}
+.ed-two{display:grid;gap:14px}
+@media(min-width:1000px){.ed-two{grid-template-columns:7fr 5fr}}
+.ed-mini{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px;padding:8px;border-radius:6px;background:#f1f3f5;text-align:center;font:11px ui-monospace,Menlo,monospace}
+.ed textarea{width:100%;min-height:80px;margin-top:8px;padding:10px;border:0;border-radius:6px;background:#eef4ff;font:13px ui-monospace,Menlo,monospace;color:#1f2937;resize:vertical}
+.ed-note{margin-top:8px;padding:8px;border-radius:6px;background:#f1f3f5;font-size:13px}
+.ed-foot{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.ed-foot a:not(.ed-cta){font:italic 500 16px Georgia,serif;text-decoration:none}</style>
 </head>
 <body>
 <main>
@@ -385,6 +438,27 @@ button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #ffe3
       </div>
     </div>
   </section>
+  <!-- EARTH DOSSIER, PART I -->
+  <section class="ed" id="eartha">
+    <div class="ed-top">
+      <b>Hermes Field Journal</b>
+      <nav class="ed-tabs"><a class="on" href="#planet/earth">Part I: Visual observation</a><a href="#planet/earth/research">Part II: Research folios</a></nav>
+      <span class="ed-acts"><a class="ed-link" href="#orrery">← Solar system</a><a class="ed-cta" href="#earth">See Earth observations →</a></span>
+    </div>
+    <div id="ed-p1"></div>
+    <div class="ed-wrap"><div class="ed-card ed-foot"><a href="#planet/venus">← Previous: Venus</a><a class="ed-cta" href="#earth">See Earth observations →</a><a class="ed-cta" href="#planet/earth/research">Continue to Part II →</a></div></div>
+  </section>
+
+  <!-- EARTH DOSSIER, PART II -->
+  <section class="ed" id="earthb">
+    <div class="ed-top">
+      <b>Hermes Field Journal</b>
+      <nav class="ed-tabs"><a href="#planet/earth">Part I: Visual observation</a><a class="on" href="#planet/earth/research">Part II: Research folios</a></nav>
+      <span class="ed-acts"><a class="ed-link" href="#orrery">← Solar system</a><a class="ed-cta" href="#earth">See Earth observations →</a></span>
+    </div>
+    <div id="ed-p2"></div>
+    <div class="ed-wrap"><div class="ed-card ed-foot"><a href="#planet/earth">← Back to Part I</a><a href="#planet/mars">Next: Mars →</a></div></div>
+  </section>
 </main>
 
 <div id="fade"></div>
@@ -418,7 +492,7 @@ var BODIES = [
       { title: "Magellan", text: "Radar-mapped about 98% of the surface through the clouds in the early 1990s." },
       { title: "Venera 7", text: "In 1970 it became the first spacecraft to transmit data from the surface of another planet." }
     ], images: [] },
-  { id: "earth", name: "Earth (Terra)", desc: "Our ocean world, and the only known place with life.", distScale: 52, radius: 3.2, color: 0x2563eb, speed: 0.020, hasMoon: true, page: "#earth",
+  { id: "earth", name: "Earth (Terra)", desc: "Our ocean world, and the only known place with life.", distScale: 52, radius: 3.2, color: 0x2563eb, speed: 0.020, hasMoon: true,
     semiMajor: "1.00 AU", vel: "29.78 km/s", period: "365.25 d", mass: "5.972 × 10²⁴ kg", temp: "-88 to 58°C", atmo: "Nitrogen 78%, Oxygen 21%",
     observations: [], images: [] },
   { id: "mars", name: "Mars", desc: "The rust world, home to Olympus Mons and polar ice caps.", distScale: 70, radius: 2.3, color: 0xc4552f, speed: 0.015,
@@ -462,7 +536,7 @@ var $ = function (id) { return document.getElementById(id); };
 var cover = $("cover"), chapter = $("chapter"), earthview = $("earthview");
 var orreryview = $("orreryview"), planetview = $("planetview"), fade = $("fade");
 var current = "cover";
-var PARENT = { chapter: "cover", orrery: "chapter", planet: "orrery", earth: "orrery" };
+var PARENT = { chapter: "cover", orrery: "chapter", planet: "orrery", eartha: "orrery", earthb: "planet/earth", earth: "planet/earth" };
 
 function nav(h) { if (location.hash === h) { route(); } else { location.hash = h; } }
 
@@ -473,6 +547,9 @@ function show(name) {
   orreryview.style.display = name === "orrery" ? "block" : "none";
   planetview.style.display = name === "planet" ? "flex" : "none";
   earthview.style.display = name === "earth" ? "block" : "none";
+  earthview.style.display = name === "earth" ? "block" : "none";
+$("eartha").style.display = name === "eartha" ? "block" : "none";
+$("earthb").style.display = name === "earthb" ? "block" : "none";
   chapter.classList.toggle("rise", name === "chapter");
   planetview.classList.toggle("rise", name === "planet");
   document.body.classList.toggle("lock", name === "earth" || name === "orrery");
@@ -487,7 +564,7 @@ function route() {
   var name = p[0] || "cover";
   if (name === "planet") {
     var b = byId(p[1]);
-    if (!b) { name = "orrery"; } else { renderPlanet(b); }
+    if (!b) { name = "orrery"; } $("evback").onclick = function () { nav("#planet/earth"); }; $("evback").textContent = "← Back to Earth";
   } else if (["cover", "chapter", "orrery", "earth"].indexOf(name) < 0) {
     name = "cover";
   }
@@ -1057,6 +1134,69 @@ earthEl.addEventListener("wheel", function (e) {
 
 render(true);
 setTimeout(loadPictures, 300);
+/* ===== Earth dossier (Part I + Part II). Replace each [placeholder] with your own text. ===== */
+(function () {
+  function card(l) { return '<div class="ed-card"><span class="ed-lab">' + l + '</span><b class="ed-val">—</b><span class="ed-sub">[placeholder]</span></div>'; }
+  var strip = ["Catalog ref", "Semi-major axis", "Rotation", "Surface gravity", "Solar irradiance"].map(card).join("");
+  var comps = [["Gas 1", "—", 70], ["Gas 2", "—", 40], ["Gas 3", "—", 15], ["Gas 4", "—", 8]].map(function (c) {
+    return '<div class="ed-comp" data-t="' + c[0] + ': [placeholder detail]"><div class="ed-row2"><span>' + c[0] + '</span><span>' + c[1] + '</span></div><div class="ed-track"><i style="width:' + c[2] + '%"></i></div></div>';
+  }).join("");
+  var pins = [[38, 45, 1], [30, 72, 2], [70, 30, 3]].map(function (p) {
+    return '<button class="ed-pin" type="button" style="top:' + p[0] + '%;left:' + p[1] + '%" aria-label="Pin ' + p[2] + '" data-t="Pin ' + p[2] + ' · [placeholder coordinates] · [placeholder description]"></button>';
+  }).join("");
+  var layers = ["Ocean", "Clouds", "Plants", "Magnetic shield"].map(function (l, i) {
+    return '<button class="ed-b ed-layer' + (i ? "" : " on") + '" type="button">' + l + '</button>';
+  }).join("");
+  var reads = ["Field of view", "Surface temp", "Temp range", "Air pressure", "Ocean heat"].map(function (l) {
+    return '<div class="ed-read"><span>' + l + '</span><b>—</b></div>';
+  }).join("");
+  var folios = [1, 2, 3, 4].map(function (n) {
+    return '<div class="ed-card"><span class="ed-lab">Folio ' + n + ' / 4</span><h2>[Placeholder title]</h2><p>[Placeholder: one or two sentences about this research topic.]</p>' +
+      '<div class="ed-mini"><div>—</div><div>—</div><div>—</div></div></div>';
+  }).join("");
+  var sets = [1, 2, 3].map(function () {
+    return '<div class="ed-read"><span>[Dataset placeholder] · [format, size]</span><button class="ed-b ed-get" type="button" style="background:#eef4ff;color:#002869">Get data</button></div>';
+  }).join("");
+
+  var p1 = $("ed-p1"), p2 = $("ed-p2");
+  if (p1) p1.innerHTML =
+    '<div class="ed-wrap"><div class="ed-card ed-head"><div><span class="ed-lab">Sol-sys / 03 · [placeholder entry label]</span><h1>Earth: [placeholder subtitle]</h1><p>[Placeholder: one or two sentences introducing Earth.]</p></div>' +
+    '<div class="ed-q">“[Placeholder quote about Earth.]”<span class="ed-lab" style="margin-top:6px">— [Placeholder source]</span></div></div>' +
+    '<div class="ed-strip">' + strip + '</div>' +
+    '<div class="ed-stage">' +
+      '<div class="ed-card"><span class="ed-lab">Atmosphere and hydrosphere</span><h2>[Placeholder title]</h2><p>[Placeholder: short description.]</p><div style="margin-top:10px">' + comps + '</div><div class="ed-focus" id="ed-focus">Tap a row to read about it.</div></div>' +
+      '<div class="ed-view"><div class="ed-vh"><span>● EPIC full-disk photo</span><button class="ed-b" type="button" id="ed-retbtn">Reticle</button></div>' +
+        '<div class="ed-globe"><img id="ed-img" alt="Earth from the DSCOVR spacecraft"><div class="ed-ret" id="ed-ret"></div>' + pins + '</div>' +
+        '<div class="ed-target" id="ed-target">Tap a pin to read about it.</div>' +
+        '<div class="ed-bar">' + layers + '</div></div>' +
+      '<div class="ed-card"><span class="ed-lab">Sensors and telemetry</span><h2>[Placeholder title]</h2><p>[Placeholder: short description.]</p><div style="margin-top:10px">' + reads + '</div></div>' +
+    '</div></div>';
+  if (p2) p2.innerHTML =
+    '<div class="ed-wrap"><div class="ed-card"><span class="ed-lab">Section 02 · Research folios</span><h2>Research folios and archives</h2><p>[Placeholder: one sentence about this section.]</p></div>' +
+    '<div class="ed-grid4">' + folios + '</div>' +
+    '<div class="ed-two"><div class="ed-card"><span class="ed-lab">Field logbook</span><textarea id="ed-note" placeholder="Write a note about what you see…"></textarea>' +
+      '<div style="margin-top:8px"><button class="ed-cta" type="button" id="ed-save" style="border:0;cursor:pointer">Save note</button></div><div id="ed-log"></div></div>' +
+    '<div class="ed-card"><span class="ed-lab">Datasets</span><h2>[Placeholder title]</h2>' + sets + '</div></div></div>';
+
+  var img = $("ed-img");
+  if (img && typeof getImageURL === "function") { img.src = getImageURL(observations[6]); }
+  [].forEach.call(document.querySelectorAll(".ed-comp"), function (r) { r.onclick = function () { $("ed-focus").textContent = r.getAttribute("data-t"); }; });
+  [].forEach.call(document.querySelectorAll(".ed-pin"), function (p) { p.onclick = function () { $("ed-target").textContent = p.getAttribute("data-t"); }; });
+  [].forEach.call(document.querySelectorAll(".ed-layer"), function (b) {
+    b.onclick = function () {
+      [].forEach.call(document.querySelectorAll(".ed-layer"), function (x) { x.classList.toggle("on", x === b); });
+      $("ed-target").textContent = "Layer: " + b.textContent + " · [placeholder description]";
+    };
+  });
+  var rb = $("ed-retbtn"); if (rb) rb.onclick = function () { var r = $("ed-ret"); r.style.display = r.style.display === "none" ? "" : "none"; };
+  [].forEach.call(document.querySelectorAll(".ed-get"), function (b) { b.onclick = function () { alert("Placeholder: add the download link for this dataset."); }; });
+  var sv = $("ed-save"); if (sv) sv.onclick = function () {
+    var t = $("ed-note"), v = t.value.trim(); if (!v) return;
+    var d = document.createElement("div"); d.className = "ed-note"; d.textContent = v;
+    $("ed-log").insertBefore(d, $("ed-log").firstChild); t.value = "";
+  };
+  addEventListener("hashchange", function () { [].forEach.call(document.querySelectorAll(".ed"), function (e) { e.scrollTop = 0; }); });
+})();
 route();   // open whichever page the address asks for (the cover by default)
 </script>
 </body>
