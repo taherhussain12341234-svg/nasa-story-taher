@@ -564,7 +564,7 @@ function route() {
   var name = p[0] || "cover";
   if (name === "planet") {
     var b = byId(p[1]);
-    if (!b) { name = "orrery"; } $("evback").onclick = function () { nav("#planet/earth"); }; $("evback").textContent = "← Back to Earth";
+    if (!b) { name = "orrery"; } else if (b.id === "earth") { name = p[2] === "research" ? "earthb" : "eartha"; } else { renderPlanet(b); }
   } else if (["cover", "chapter", "orrery", "earth"].indexOf(name) < 0) {
     name = "cover";
   }
@@ -576,7 +576,7 @@ $("begin").onclick = function () { nav("#chapter"); };
 $("back").onclick = function () { nav("#cover"); };
 $("turn").onclick = function () { nav("#orrery"); };
 $("orb-back").onclick = function () { nav("#chapter"); };
-$("evback").onclick = function () { nav("#orrery"); };
+$("evback").onclick = function () { nav("#planet/earth"); }; $("evback").textContent = "← Back to Earth";
 document.addEventListener("keydown", function (e) {
   if (e.key === "Escape" && PARENT[current]) { nav("#" + PARENT[current]); return; }
   if (current !== "earth") { return; }
