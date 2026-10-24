@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8f9ff">
+<title>Mercury — A storybook by NASA</title>
+<script>
+/* Wider screens are sent to mercury.html, but only if that file exists.
+   Add ?mobile to the address to stay here. */
+(function () {
+  if (location.protocol.indexOf("http") !== 0) { return; }
+  if (window.matchMedia("(min-width:701px)").matches && location.search.indexOf("mobile") < 0) {
+    fetch("mercury.html", { method: "HEAD" }).then(function (r) {
+      if (r.ok) { location.replace("mercury.html" + location.hash); }
+    }).catch(function () {});
+  }
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Source+Sans+3:wght@400;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{background:#f8f9ff;color:#0b1c30;font-family:"Source Sans 3",system-ui,sans-serif;overflow:hidden;height:100dvh;overscroll-behavior:none;-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #a9310f;outline-offset:2px}
+@keyframes rise{from{opacity:.35}to{opacity:1}}
+/* ===== Phone solar system + planet pages ===== */
+#mobileview{display:none;flex-direction:column;position:fixed;inset:0;z-index:10;max-width:none;margin:0;padding:0;background:#f8f9ff;color:#0b1c30;font-family:"Source Sans 3",system-ui,-apple-system,sans-serif}
+#mobileview button{font:inherit;cursor:pointer}
+.mv-head{flex:none;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:calc(10px + env(safe-area-inset-top)) 16px 10px;background:rgba(255,255,255,.96);border-bottom:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.mv-back{width:34px;height:34px;border-radius:50%;background:#f1f5f9;border:1px solid #e2e8f0;color:#a9310f;font-size:16px;display:grid;place-items:center;padding:0}
+.mv-eyebrow{font:700 10px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#a9310f}
+.mv-title{font:600 13px "Playfair Display",Georgia,serif;color:#0f172a}
+.mv-small{font:400 9px "JetBrains Mono",monospace;color:#545f73}
+.mv-count{font:700 10px "JetBrains Mono",monospace;color:#a9310f}
+.mv-scroll{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.mv-pillsbar{position:sticky;top:0;z-index:4;background:rgba(255,255,255,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);border-bottom:1px solid #e2e8f0;padding:8px 12px}
+.mv-pills{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.mv-pills::-webkit-scrollbar{display:none}
+.mv-pill{flex:none;border-radius:999px;font:400 11px "JetBrains Mono",monospace;text-transform:uppercase;padding:7px 11px;background:#fff;border:1px solid #e2e8f0;color:#545f73;white-space:nowrap}
+.mv-pill.on{background:#a9310f;border-color:#a9310f;color:#fff;font-weight:700}
+.mv-card{margin:16px 16px 0;padding:16px;border-radius:16px;background:#fff;border:1px solid #e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:12px}
+.mv-row{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.mv-label{font:700 11px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#0f172a}
+.mv-label.red{color:#a9310f}
+.mv-badge{font:500 10px "JetBrains Mono",monospace;background:#f1f5f9;border:1px solid #e2e8f0;color:#545f73;padding:2px 8px;border-radius:4px}
+.mv-orbbox{position:relative;width:100%;aspect-ratio:1/1;max-width:460px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid rgba(169,49,15,.15);background:radial-gradient(circle at 50% 50%,#fff8ea 0%,#eef4ff 55%,#e1ebff 100%)}
+#mv-orb{display:block;width:100%;height:100%;cursor:pointer;touch-action:manipulation}
+.mv-seg3{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.mv-seg2{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.mv-btn{font:400 10px "JetBrains Mono",monospace;text-transform:uppercase;text-align:center;padding:10px 8px;border-radius:8px;background:#f1f5f9;border:1px solid #e2e8f0;color:#545f73}
+.mv-btn.on{background:#a9310f;border-color:#a9310f;color:#fff;font-weight:700}
+
+/* the book page under the picture */
+.mv-runhead{display:flex;justify-content:space-between;gap:8px;padding:18px 18px 0;font:400 9.5px "JetBrains Mono",monospace;letter-spacing:.2em;text-transform:uppercase;color:#8a7a52}
+.mv-sheet{margin:12px 16px 0;padding:16px;border-radius:14px;background:#fffaf0;border:1px solid #eadfc4;box-shadow:0 1px 0 #efe4c8,0 2px 0 #e8dcbc,0 8px 18px rgba(80,60,20,.08);display:flex;flex-direction:column;gap:12px}
+.mv-objtag{font:700 10px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;background:#ffdbd1;color:#881f00;padding:3px 10px;border-radius:999px}
+.mv-au{font:500 10px "JetBrains Mono",monospace;color:#8a7a52;text-align:right}
+.mv-title2{font:600 26px/1.12 "Playfair Display",Georgia,serif;color:#0f172a;letter-spacing:-.02em}
+.mv-intro{font-size:14.5px;line-height:1.7;color:#334155}
+.mv-intro::first-letter{float:left;font:700 46px/.85 "Playfair Display",Georgia,serif;padding:5px 7px 0 0;color:#a9310f}
+.mv-quote2{border-left:3px solid #a9310f;padding:2px 0 2px 12px}
+.mv-quote2 p{font:italic 400 14px/1.55 "Playfair Display",Georgia,serif;color:#475569}
+.mv-quote2 span{display:block;margin-top:6px;font:700 10px "JetBrains Mono",monospace;text-transform:uppercase;color:#a9310f}
+.mv-vhead{display:flex;justify-content:space-between;gap:8px;font:600 10px "JetBrains Mono",monospace;letter-spacing:.06em;text-transform:uppercase;color:#35384a}
+.mv-vhead i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#dc2626;margin-right:6px}
+.mv-stage{position:relative;aspect-ratio:1/1;border-radius:10px;background:#0a1a3a;overflow:hidden;display:grid;place-items:center}
+.mv-stage img{max-width:100%;max-height:100%;object-fit:contain;transition:transform .5s ease,filter .4s ease}
+.mv-cap{position:absolute;left:8px;right:8px;bottom:8px;background:rgba(5,15,42,.74);color:#fff7d6;font:500 10.5px "JetBrains Mono",monospace;padding:5px 9px;border-radius:6px}
+.mv-ctrls{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.mv-ctrls button{background:#fff;border:1px solid #e2e8f0;color:#35384a;border-radius:999px;padding:8px 12px;font:600 11px "JetBrains Mono",monospace}
+.mv-ctrls button.on{background:#a9310f;border-color:#a9310f;color:#fff}
+.mv-ctrls a{margin-left:auto;font:600 12px system-ui,sans-serif;color:#a9310f;text-decoration:none}
+.mv-thumbs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+.mv-thumbs::-webkit-scrollbar{display:none}
+.mv-thumbs button{flex:none;width:62px;height:48px;border:2px solid transparent;border-radius:6px;padding:0;overflow:hidden;background:#cdbf93}
+.mv-thumbs button.on{border-color:#a9310f}
+.mv-thumbs img{width:100%;height:100%;object-fit:cover;display:block}
+.mv-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mv-chip{padding:10px;border-radius:12px;background:#fff;border:1px solid #eadfc4}
+.mv-chip span{display:block;font:400 9px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#8a7a52}
+.mv-chip b{display:block;font:700 13px "JetBrains Mono",monospace;color:#0f172a;margin-top:2px}
+.mv-chip i{font-style:normal;font-size:11px;color:#64748b}
+.mv-core{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;background:#fff;border:1px solid #eadfc4}
+.mv-core span{display:block;font:400 9px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#8a7a52}
+.mv-core b{display:block;font:600 15px "Playfair Display",Georgia,serif;color:#0f172a}
+.mv-core div.r{text-align:right}
+.mv-core div.r b{font:700 13px "JetBrains Mono",monospace;color:#a9310f}
+.mv-fc{padding:14px;border-radius:12px;background:#fff;border:1px solid #eadfc4;display:flex;flex-direction:column;gap:8px}
+.mv-code{font:700 10px "JetBrains Mono",monospace;letter-spacing:.1em;text-transform:uppercase;color:#a9310f}
+.mv-tag2{font:400 10px "JetBrains Mono",monospace;color:#8a7a52}
+.mv-fc h3{font:600 18px/1.2 "Playfair Display",Georgia,serif;color:#0f172a}
+.mv-fc p{font-size:13.5px;line-height:1.6;color:#475569}
+.mv-ff{border-top:1px solid #eadfc4;padding-top:6px;font:400 10px "JetBrains Mono",monospace;letter-spacing:.08em;text-transform:uppercase;color:#8a7a52}
+.mv-tl{display:grid;gap:10px}
+.mv-tl>div{display:flex;gap:10px;align-items:flex-start}
+.mv-tl em{flex:none;width:30px;height:30px;border-radius:50%;background:#efe3bd;font:700 11px "JetBrains Mono",monospace;font-style:normal;display:grid;place-items:center;color:#35384a}
+.mv-tl b{display:block;font:700 13px "Playfair Display",Georgia,serif;color:#0f172a}
+.mv-tl span{font-size:12px;line-height:1.45;color:#475569}
+.mv-cta{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px;border-radius:16px;background:#a9310f;color:#fff;text-decoration:none;box-shadow:0 6px 16px rgba(169,49,15,.28);margin:12px 16px 0}
+.mv-cta small{display:block;font:700 10px "JetBrains Mono",monospace;text-transform:uppercase;opacity:.8}
+.mv-cta b{font:600 16px "Playfair Display",Georgia,serif}
+.mv-cta span{font-size:22px}
+.mv-bq{font:italic 400 17px/1.55 "Playfair Display",Georgia,serif;color:#0f172a;border-left:3px solid #a9310f;padding-left:14px}
+.mv-place{font:700 10px "JetBrains Mono",monospace;letter-spacing:.14em;text-transform:uppercase;color:#a9310f}
+.mv-note{display:flex;gap:8px}
+.mv-note input{flex:1;min-width:0;background:#fff;border:1px solid #eadfc4;border-radius:8px;padding:11px 12px;font:14px system-ui,sans-serif;color:#0f172a}
+.mv-note button{background:#a9310f;color:#fff;border:0;border-radius:8px;padding:0 16px;font:600 13px system-ui,sans-serif}
+.mv-notes{list-style:none;padding:0;display:grid;gap:6px}
+.mv-notes li{font:italic 14px/1.5 "Playfair Display",Georgia,serif;color:#35384a;padding-left:12px;border-left:2px solid #eadfc4}
+.mv-notes li.mt{color:#9a8f6c;border-left-color:transparent;padding-left:0}
+.mv-ds{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.mv-ds button{text-align:left;background:#fff;border:1px solid #eadfc4;border-radius:10px;padding:9px;color:#0f172a}
+.mv-ds button span{font:400 9px "JetBrains Mono",monospace;letter-spacing:.1em;color:#8a7a52}
+.mv-ds button b{display:block;font:700 11px "JetBrains Mono",monospace;margin-top:3px}
+.mv-ds button i{display:block;font-style:normal;font-size:10px;color:#8a7a52;margin-top:2px}
+.mv-pn{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 16px 0}
+.mv-pn button{padding:10px;border-radius:12px;background:#fff;border:1px solid #eadfc4;display:flex;align-items:center;gap:8px;text-align:left;color:#a9310f;font-size:16px}
+.mv-pn button:last-child{justify-content:space-between;text-align:right}
+.mv-pn small{display:block;font:400 9px "JetBrains Mono",monospace;text-transform:uppercase;color:#64748b}
+.mv-pn b{font:700 12px "Playfair Display",Georgia,serif;color:#0f172a}
+.mv-end{text-align:center;padding:18px 0 28px;font:italic 14px Georgia,serif;color:#8a7a52}
+.mv-foot{flex:none;display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 16px calc(8px + env(safe-area-inset-bottom));background:rgba(255,255,255,.96);border-top:1px solid #e2e8f0;font:400 10px "JetBrains Mono",monospace;text-transform:uppercase;color:#64748b}
+.mv-foot b{color:#a9310f}
+.mv-foot em{font:italic 13px Georgia,serif;text-transform:none;color:#8a7a52}
+.mv-foot i{display:inline-block;width:8px;height:8px;border-radius:50%;background:#a9310f;margin-right:6px;animation:rise 1.4s ease infinite alternate}
+
+#mobileview{display:flex}
+/* ===== Shared: page-turn, contents, toast, folio visuals ===== */
+#leafwrap{position:fixed;inset:0;z-index:60;pointer-events:none;perspective:2200px;overflow:hidden}
+#leaf{position:absolute;inset:0;transform-origin:0 50%;opacity:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:linear-gradient(90deg,#e4d3a0 0%,#fff2cf 9%,#fff8e1 60%,#f6e9c4 100%);box-shadow:inset -40px 0 70px rgba(120,86,24,.28)}
+#leafwrap.go #leaf{animation:leaf .85s cubic-bezier(.55,.06,.25,1) both}
+#leafwrap::after{content:"";position:absolute;inset:0;opacity:0;background:linear-gradient(90deg,rgba(0,0,0,.38),transparent 55%)}
+#leafwrap.go::after{animation:leafshade .85s ease both}
+@keyframes leaf{0%{opacity:1;transform:rotateY(0)}14%{opacity:1;transform:rotateY(0)}100%{opacity:1;transform:rotateY(-104deg)}}
+@keyframes leafshade{0%{opacity:0}30%{opacity:1}100%{opacity:0}}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom));transform:translate(-50%,20px);z-index:80;background:#0a2555;color:#fff7d6;border:1px solid rgba(255,214,107,.5);padding:10px 16px;border-radius:999px;font:600 13px system-ui,sans-serif;opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;max-width:calc(100% - 32px);text-align:center}
+#toast.on{opacity:1;transform:translate(-50%,0)}
+.fv{background:rgba(255,255,255,.55);border:1px solid #e0d6b8;border-radius:8px;padding:8px 10px;display:flex;flex-direction:column;gap:6px}
+.fv-row{display:flex;justify-content:space-between;gap:8px;font:400 10px ui-monospace,Menlo,monospace;letter-spacing:.06em;text-transform:uppercase;color:#7a6f4f}
+.fv-row b{color:#182a58;font-weight:700;text-align:right}
+.fv-bar{height:8px;border-radius:3px;background:#e6dcc0;overflow:hidden;display:flex;gap:2px}
+.fv-bar i{display:block;height:100%}
+.fv-thermal{height:8px;border-radius:3px;background:linear-gradient(90deg,#0284c7,#fbbf24,#e11d48);position:relative}
+.fv-thermal i{position:absolute;top:-2px;bottom:-2px;width:5px;background:#fff;border:1px solid #64748b}
+.fv-donut{display:flex;align-items:center;gap:10px}
+.fv-donut svg{width:46px;height:46px;flex:none}
+.fv-donut b{display:block;font:700 11px ui-monospace,Menlo,monospace;color:#182a58}
+.fv-donut span{font:400 11px/1.3 system-ui,sans-serif;color:#6b6252}
+
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="mobileview">
+  <div class="mv-head">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button class="mv-back" id="mv-back" type="button" aria-label="Back to the solar system">←</button>
+      <div><div class="mv-eyebrow">NASA FIELD JOURNAL · 02</div><div class="mv-title">Hermes Field Journal</div></div>
+    </div>
+    <div style="text-align:right"><div class="mv-small">SOLAR SYSTEM</div><div class="mv-count">02/09 Orbit</div></div>
+  </div>
+  <div class="mv-scroll" id="mv-scroll"><div id="mv-page"></div></div>
+  <div class="mv-foot"><span><i></i><b>Mercury</b></span><em>— 5 —</em><b>NASA / PDS</b></div>
+</div>
+<div id="leafwrap" aria-hidden="true"><div id="leaf"></div></div>
+<div id="toast" role="status"></div>
+<script>
+function escHtml(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+/* Mercury photos from the NASA Image and Video Library (MESSENGER) */
+function nasaImg(id, title, size) {
+  var base = "https://images-assets.nasa.gov/image/" + id + "/" + id;
+  return { src: base + "~thumb.jpg", big: base + (size || "~medium") + ".jpg", alt: title, caption: title };
+}
+var PHOTOS = [
+  nasaImg("PIA16908", "Mercury, Mercury!"),
+  nasaImg("PIA11773", "Volcanism on Mercury"),
+  nasaImg("PIA14530", "Mercury Smile"),
+  nasaImg("PIA17855", "Mercury in Bronze"),
+  nasaImg("PIA11406", "Mercury in Color!", "~orig"),
+  nasaImg("PIA17622", "Crescent Mercury", "~orig"),
+  nasaImg("PIA15190", "Mercury Globe: North Pole"),
+  nasaImg("PIA15164", "Mercury Globe: South Pole"),
+  nasaImg("PIA12278", "A Global Map of Mercury's Surface"),
+  nasaImg("PIA17386", "Enhanced Color Mercury Map"),
+  nasaImg("PIA16388", "Lowlands in Mercury North"),
+  nasaImg("PIA13674", "Looking Toward Mercury Horizon")
+];
+
+var M = {
+  journal: "Hermes Field Journal",
+  kind: "Terrestrial · Silicate-iron core",
+  subtitle: "The Swift World at Sol’s Edge",
+  title: "Mercury: The Swift World at Sol’s Edge",
+  intro: "A scientific field note on extreme thermal swings, scarred basaltic basins, and the innermost terrestrial wanderer.",
+  quote: "“Baked by solar fury yet carrying ancient shadowed ice within its polar scarps.”",
+  quoteBy: "— Orbital Observer Note, MDIS Team",
+  entry: "Observation entry #01 // MESSENGER MDIS",
+  viewport: { instrument: "MDIS WAC // NARROW SYNTHESIS", bands: "1054 nm / 750 nm / 430 nm" },
+  ledger: [
+    ["CATALOG REF", "NASA-EXO-0199", "Class: Silicate-Iron Core"],
+    ["SEMI-MAJOR AXIS", "0.3871 AU", "57,909,175 km mean"],
+    ["RESONANCE", "87.969 d", "3:2 Spin-Orbit Lock"],
+    ["SOLAR IRRADIANCE", "9,126.6 W/m²", "6.67× Earth Sol Flux"]
+  ],
+  core: ["METALLIC CORE VOLUME", "85.2% inner radius span", "5.427 g/cm³", "BULK DENSITY"],
+  folios: [
+    { code: "FOLIO GEO-01", tag: "MDIS / MASCS", title: "Planetary Contraction & Scarps",
+      text: "Cooling of the immense iron core yielded global radial shrinkage of ~7 km, thrusting the crust into colossal lobate thrust scarps.",
+      more: "As Mercury cooled over four billion years, its enormous molten metallic core crystallized. This interior shrinkage crumpled the basaltic crust like a drying fruit, throwing up lobate scarps (Discovery Rupes) climbing up to 3 km in height.",
+      viz: [ { kind: "bar", label: "CORE VOLUMETRIC FRACTION", value: "85.2%", parts: [[85, "#c9553c"], [15, "#e0a34a"]] },
+             { kind: "kv", label: "RADIAL SHRINKAGE", value: "ΔR ≈ -7.0 KM" } ],
+      foot: "PRIMARY SCARP: ENTERPRISE RUPES" },
+    { code: "FOLIO THM-02", tag: "VIRS RAD-3", title: "The 600° Chasm & Resonance",
+      text: "Locked in a 3:2 spin-orbit resonance; daylight scorches at +430°C while deep nocturnal voids plunge to -180°C.",
+      more: "Lacking any atmosphere to insulate the surface, Mercury endures the starkest temperature variation in the planetary system. One Mercurian solar day spans 176 Earth days, prolonging continuous high-noon roasting.",
+      viz: [ { kind: "thermal", left: "NIGHT: -180°C", right: "DAY: +430°C", marker: 35 },
+             { kind: "kv", label: "SPIN-ORBIT RESONANCE", value: "3:2 (58.6d / 88.0d)" },
+             { kind: "kv", label: "SOLAR FLUX (PERIHELION)", value: "14,446 W/M²" } ],
+      foot: "MAX DELTA: 610 KELVIN" },
+    { code: "FOLIO CRYO-03", tag: "MLA RADAR", title: "Ice in the Solar Kiln",
+      text: "Permanently Shadowed Regions (PSRs) at the poles harbor pure volatile water-ice deposits beneath carbonaceous lag.",
+      more: "Because Mercury has near-zero axial tilt (0.034°), floors of deep impact craters at the poles never receive direct sunlight. Earth-based radar and MESSENGER neutron spectrometers revealed pure water ice deposits permanently sheltered in perpetual shadow.",
+      viz: [ { kind: "donut", pct: 32, title: "Prokofiev Crater", text: "~100B metric tons H₂O sequestered" },
+             { kind: "kv", label: "INSULATION OVERBURDEN", value: "10-20 CM ORGANIC LAG" } ],
+      foot: "LATITUDE: > 82.5° NORTH" },
+    { code: "FOLIO CHRONO-04", tag: "FLIGHT ARCHIVES", title: "Deep Space Probes",
+      text: "Chronology of flybys and orbital insertions from Mariner 10 to MESSENGER and ESA/JAXA BepiColombo.",
+      more: "Chronology of flybys and orbital insertions from Mariner 10 to MESSENGER and ESA/JAXA BepiColombo.",
+      viz: [ { kind: "progress", label: "MESSENGER (2011–2015)", value: "4,104 ORBITS", pct: 100, color: "#194e9e" },
+             { kind: "progress", label: "BEPICOLOMBO (MPO/MMO)", value: "ORBIT DEC 2026", pct: 82, color: "#e0a34a" },
+             { kind: "kv", label: "GRAVITY ASSISTS", value: "9 FLIGHTS · 6× MERCURY PASS" } ],
+      foot: "HISTORIC BASE: MARINER 10 ('74)" }
+  ],
+  log: { quote: "“There is no whisper of wind upon this world. Every impact crater from the Late Heavy Bombardment remains precisely as it was carved four billion years ago, pristine under the violent radiation of the sun.”",
+         place: "SOL-DAY 176 // CALORIS IMPACT RIM" },
+  datasets: [
+    { title: "MDIS Raw FITS", size: "4.8 GB Mosaic", kind: ".FITS" },
+    { title: "Thermal Logs", size: "128 MB Vector", kind: ".CSV" },
+    { title: "Lunar Basalts", size: "Apollo 15/17", kind: "CROSS-REF" }
+  ],
+  timeline: [
+    { badge: "74", title: "Mariner 10 Flybys", text: "Mapped 45% of surface; discovered surprising magnetic dipole." },
+    { badge: "11", title: "MESSENGER Orbital Tour", text: "4,104 orbits over 4 years; completed global basaltic mapping." },
+    { badge: "26", title: "BepiColombo (ESA / JAXA)", text: "Dual orbiters arriving to investigate exosphere and deep core interior." }
+  ]
+};
+
+/* small folio visuals (bars, thermometer, ring) */
+function vizHTML(items) {
+  var e = escHtml;
+  return "<div class=\"fv\">" + items.map(function (v) {
+    if (v.kind === "bar") {
+      return "<div class=\"fv-row\"><span>" + e(v.label) + "</span><b>" + e(v.value) + "</b></div><div class=\"fv-bar\">" +
+        v.parts.map(function (p) { return "<i style=\"flex:" + p[0] + ";background:" + p[1] + "\"></i>"; }).join("") + "</div>";
+    }
+    if (v.kind === "thermal") {
+      return "<div class=\"fv-row\"><b style=\"color:#0369a1\">" + e(v.left) + "</b><b style=\"color:#be123c\">" + e(v.right) + "</b></div><div class=\"fv-thermal\"><i style=\"left:" + v.marker + "%\"></i></div>";
+    }
+    if (v.kind === "donut") {
+      return "<div class=\"fv-donut\"><svg viewBox=\"0 0 40 40\"><circle cx=\"20\" cy=\"20\" r=\"16\" fill=\"none\" stroke=\"#e6dcc0\" stroke-width=\"4\"/><circle cx=\"20\" cy=\"20\" r=\"16\" fill=\"none\" stroke=\"#c9553c\" stroke-width=\"4\" stroke-linecap=\"round\" pathLength=\"100\" stroke-dasharray=\"100\" stroke-dashoffset=\"" + (100 - v.pct) + "\" transform=\"rotate(-90 20 20)\"/><text x=\"20\" y=\"24\" text-anchor=\"middle\" font-size=\"9\" font-weight=\"700\" fill=\"#182a58\">" + v.pct + "%</text></svg><div><b>" + e(v.title) + "</b><span>" + e(v.text) + "</span></div></div>";
+    }
+    if (v.kind === "progress") {
+      return "<div class=\"fv-row\"><span>" + e(v.label) + "</span><b>" + e(v.value) + "</b></div><div class=\"fv-bar\"><i style=\"flex:" + v.pct + ";background:" + v.color + "\"></i><i style=\"flex:" + (100 - v.pct) + ";background:transparent\"></i></div>";
+    }
+    return "<div class=\"fv-row\"><span>" + e(v.label) + "</span><b>" + e(v.value) + "</b></div>";
+  }).join("") + "</div>";
+}
+
+/* margin notes (kept in this browser; previews that block storage still work for the session) */
+var NOTES_MEM = {};
+function notesGet(id) {
+  try { var s = localStorage.getItem("notes:" + id); if (s) { return JSON.parse(s); } } catch (err) {}
+  return NOTES_MEM[id] || [];
+}
+function notesAdd(id, text) {
+  var a = notesGet(id); a.push(text); NOTES_MEM[id] = a;
+  try { localStorage.setItem("notes:" + id, JSON.stringify(a)); } catch (err) {}
+  return a;
+}
+function notesHTML(id) {
+  var a = notesGet(id);
+  return a.length ? a.map(function (t) { return "<li>" + escHtml(t) + "</li>"; }).join("") : "<li class=\"mt\">No margin notes yet.</li>";
+}
+
+var toastTimer = null;
+function showToast(msg) {
+  var t = document.getElementById("toast");
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.classList.remove("on"); }, 2400);
+}
+
+/* page-turn: a cream leaf swings across the screen while the page underneath changes */
+function pageTurn(fn) {
+  var w = document.getElementById("leafwrap");
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (!w || reduce) { fn(); return; }
+  w.classList.remove("go"); void w.offsetWidth; w.classList.add("go");
+  fn();
+}
+document.getElementById("leafwrap").addEventListener("animationend", function (e) {
+  if (e.animationName === "leaf") { this.classList.remove("go"); }
+});
+
+
+/* ---------- the Mercury page for phones ---------- */
+var $ = function (id) { return document.getElementById(id); };
+var fx = { rot: 0, term: false, therm: false };
+
+/* where the buttons lead (the solar system lives in mobile.html) */
+var LINK_SOLAR = "mobile.html#orrery", LINK_PREV = "mobile.html#planet/sun", LINK_NEXT = "mobile.html#planet/venus";
+
+function pageHTML() {
+  var d = M, e = escHtml;
+  var chips = d.ledger.map(function (c) {
+    return "<div class=\"mv-chip\"><span>" + e(c[0]) + "</span><b>" + e(c[1]) + "</b><i>" + e(c[2]) + "</i></div>";
+  }).join("");
+  var folios = d.folios.map(function (f, k) {
+    var tl = (k === 3 && d.timeline.length)
+      ? "<div class=\"mv-tl\">" + d.timeline.map(function (t) { return "<div><em>" + e(t.badge) + "</em><div><b>" + e(t.title) + "</b><span>" + e(t.text) + "</span></div></div>"; }).join("") + "</div>" : "";
+    return "<article class=\"mv-fc\"><div class=\"mv-row\"><b class=\"mv-code\">" + e(f.code) + "</b><span class=\"mv-tag2\">" + e(f.tag) + "</span></div><h3>" + e(f.title) + "</h3><p>" + e(f.more || f.text) + "</p>" + vizHTML(f.viz) + tl + "<div class=\"mv-ff\">" + e(f.foot) + "</div></article>";
+  }).join("");
+
+  return "<div class=\"mv-runhead\"><span>" + e(d.journal) + "</span><span>" + e(d.entry) + "</span></div>" +
+    "<section class=\"mv-sheet\"><div class=\"mv-row\"><span class=\"mv-objtag\">OBJECT 02 · " + e(d.kind) + "</span></div>" +
+    "<h2 class=\"mv-title2\">" + e(d.title) + "</h2><p class=\"mv-intro\">" + e(d.intro) + "</p>" +
+    "<div class=\"mv-quote2\"><p>" + e(d.quote) + "</p><span>" + e(d.quoteBy) + "</span></div></section>" +
+
+    "<section class=\"mv-sheet\"><div class=\"mv-vhead\"><span><i></i>" + e(d.viewport.instrument) + "</span><span>" + e(d.viewport.bands) + "</span></div>" +
+    "<div class=\"mv-stage\"><img id=\"mv-img\" alt=\"\"><div class=\"mv-cap\" id=\"mv-cap\">Loading photos…</div></div>" +
+    "<div class=\"mv-ctrls\"><button type=\"button\" data-fx=\"rot\">⟳ Rotate</button><button type=\"button\" data-fx=\"term\">◐ Terminator</button><button type=\"button\" data-fx=\"therm\">♨ Thermal</button><a id=\"mv-full\" href=\"#\" target=\"_blank\" rel=\"noopener\">Full ↗</a></div>" +
+    "<div class=\"mv-thumbs\" id=\"mv-thumbs\"></div></section>" +
+
+    "<section class=\"mv-sheet\"><div class=\"mv-row\"><span class=\"mv-label red\">Orbital ledger</span><span class=\"mv-small\">EPOCH J2000.0</span></div>" +
+    "<div class=\"mv-chips\">" + chips + "</div>" +
+    "<div class=\"mv-core\"><div><span>" + e(d.core[0]) + "</span><b>" + e(d.core[1]) + "</b></div><div class=\"r\"><b>" + e(d.core[2]) + "</b><span>" + e(d.core[3]) + "</span></div></div></section>" +
+
+    "<section class=\"mv-sheet\"><div class=\"mv-row\"><span class=\"mv-label red\">Research folios</span><span class=\"mv-small\">PART II</span></div>" + folios + "</section>" +
+
+    "<section class=\"mv-sheet\"><div class=\"mv-row\"><span class=\"mv-label red\">Field logbook</span><span class=\"mv-small\">" + e(d.log.place) + "</span></div>" +
+    "<blockquote class=\"mv-bq\">" + e(d.log.quote) + "</blockquote>" +
+    "<div class=\"mv-note\"><input id=\"mv-note\" type=\"text\" maxlength=\"200\" placeholder=\"Write a note in the margin…\"><button id=\"mv-save\" type=\"button\">Add</button></div>" +
+    "<ul class=\"mv-notes\" id=\"mv-notes\"></ul>" +
+    "<div class=\"mv-label\" style=\"margin-top:4px\">Datasets</div>" +
+    "<div class=\"mv-ds\">" + d.datasets.map(function (s, k) { return "<button type=\"button\" data-ds=\"" + k + "\"><span>" + e(s.kind) + "</span><b>" + e(s.title) + "</b><i>" + e(s.size) + "</i></button>"; }).join("") + "</div></section>" +
+
+    "<div class=\"mv-pn\"><button id=\"mv-prev\" type=\"button\"><span>←</span><div><small>Previous world</small><b>Sun</b></div></button>" +
+    "<button id=\"mv-next\" type=\"button\"><div><small>Next world</small><b>Venus</b></div><span>→</span></button></div>" +
+    "<div class=\"mv-end\">❦ Photos: NASA Image and Video Library ❦</div>";
+}
+
+function applyFx() {
+  var img = $("mv-img"); if (!img) { return; }
+  var f = [];
+  if (fx.therm) { f.push("hue-rotate(180deg) saturate(2.5) contrast(1.2)"); }
+  if (fx.term) { f.push("contrast(1.6) brightness(.85)"); }
+  img.style.filter = f.length ? f.join(" ") : "none";
+  img.style.transform = "rotate(" + fx.rot + "deg)" + (fx.rot % 180 ? " scale(.7)" : "");
+  Array.prototype.forEach.call(document.querySelectorAll(".mv-ctrls [data-fx]"), function (btn) {
+    var k = btn.getAttribute("data-fx");
+    btn.classList.toggle("on", k === "rot" ? fx.rot !== 0 : !!fx[k]);
+  });
+}
+function showPhoto(k) {
+  var im = PHOTOS[k], img = $("mv-img");
+  img.src = im.big; img.alt = im.alt;
+  $("mv-cap").textContent = im.caption;
+  $("mv-full").href = im.big;
+  Array.prototype.forEach.call($("mv-thumbs").children, function (t, j) { t.classList.toggle("on", j === k); });
+  applyFx();
+}
+
+$("mv-page").innerHTML = pageHTML();
+$("mv-prev").onclick = function () { location.href = LINK_PREV; };
+$("mv-next").onclick = function () { location.href = LINK_NEXT; };
+Array.prototype.forEach.call(document.querySelectorAll(".mv-ctrls [data-fx]"), function (btn) {
+  btn.onclick = function () {
+    var k = btn.getAttribute("data-fx");
+    if (k === "rot") { fx.rot = (fx.rot + 90) % 360; } else { fx[k] = !fx[k]; }
+    applyFx();
+  };
+});
+$("mv-thumbs").innerHTML = PHOTOS.map(function (im, k) { return "<button type=\"button\" aria-label=\"Photo " + (k + 1) + "\"><img src=\"" + escHtml(im.src) + "\" alt=\"\"></button>"; }).join("");
+Array.prototype.forEach.call($("mv-thumbs").children, function (t, k) { t.onclick = function () { showPhoto(k); }; });
+showPhoto(0);
+
+var inp = $("mv-note"), notes = $("mv-notes");
+notes.innerHTML = notesHTML("mercury");
+$("mv-save").onclick = function () {
+  var v = inp.value.trim();
+  if (!v) { inp.focus(); return; }
+  notesAdd("mercury", v); inp.value = ""; notes.innerHTML = notesHTML("mercury");
+  showToast("Note added to the margin.");
+};
+inp.onkeydown = function (ev) { if (ev.key === "Enter") { $("mv-save").click(); } };
+Array.prototype.forEach.call(document.querySelectorAll(".mv-ds button"), function (btn) {
+  btn.onclick = function () {
+    var s = M.datasets[Number(btn.getAttribute("data-ds"))];
+    if (s && s.href) { window.open(s.href, "_blank", "noopener"); } else { showToast("This dataset link is not set up yet."); }
+  };
+});
+$("mv-back").onclick = function () { location.href = LINK_SOLAR; };
+document.addEventListener("keydown", function (e) { if (e.key === "Escape") { location.href = LINK_SOLAR; } });
+
+pageTurn(function () {});   // the page turns as Mercury's pages arrive
+</script>
+</body>
+</html>
